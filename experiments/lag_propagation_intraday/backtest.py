@@ -140,11 +140,14 @@ def raw_signal_to_portfolio(raw: np.ndarray, target_rets: np.ndarray, annualizat
     port_raw_ret = np.zeros(T)
     port_raw_ret[1:] = (weight[:-1] * target_rets[1:]).sum(axis=1)
 
-    scale = np.ones(T)
-    for t in range(vol_lookback + 1, T):
-        realized = port_raw_ret[t - vol_lookback:t].std(ddof=1) * np.sqrt(annualization)
-        if realized > 1e-8:
-            scale[t] = min(target_vol_annual / realized, max_leverage)
+    # rolling std of port_raw_ret, evaluated one bar back (no lookahead), vectorized
+    # -- a plain Python per-bar loop here is O(T) numpy calls and doesn't scale to
+    # T ~ 10^6 minute bars.
+    rolling_std = pd.Series(port_raw_ret).rolling(vol_lookback).std(ddof=1).shift(1).to_numpy()
+    realized = rolling_std * np.sqrt(annualization)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        scale = np.where(realized > 1e-8, np.minimum(target_vol_annual / realized, max_leverage), 1.0)
+    scale = np.nan_to_num(scale, nan=1.0)
 
     scaled_weight = weight * scale[:, None]
     turnover = np.abs(np.diff(scaled_weight, axis=0, prepend=np.zeros((1, ntar)))).sum(axis=1)

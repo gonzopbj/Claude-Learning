@@ -34,6 +34,7 @@ CONFIGS = {
         target_vol_annual=0.20,
         vol_lookback=24 * 30,
         max_leverage=3.0,
+        n_permutations=200,
     ),
     "minute": dict(
         window=60 * 24 * 7,    # 1-week trailing window
@@ -45,6 +46,7 @@ CONFIGS = {
         target_vol_annual=0.20,
         vol_lookback=60 * 24 * 7,
         max_leverage=3.0,
+        n_permutations=50,  # T~1.4M rows: each permutation costs ~5s, keep runtime sane
     ),
 }
 
@@ -215,7 +217,7 @@ def main():
         for row in disc["all_significant_pairs"]:
             print(f"  {row['driver']:15s} -> {row['target']:15s} lag={row['lag']:3d} corr={row['corr']:+.4f} q={row['qvalue']:.2e}")
 
-        bt = run_backtest_suite(rets, ALL_ASSETS, TRADABLE_ASSETS, cfg)
+        bt = run_backtest_suite(rets, ALL_ASSETS, TRADABLE_ASSETS, cfg, n_permutations=cfg["n_permutations"])
         for label, m in bt["gated_results"].items():
             print(f"  [{label}] sharpe={m['sharpe']:.3f} n_active={m['mean_n_active']:.2f} "
                   f"turnover={m['mean_turnover']:.3f} threshold={m['threshold_abs_corr']:.4f}")
@@ -236,7 +238,7 @@ def main():
                                 f"Effect of confidence gating ({freq} bars)")
         plot_null_distribution(bt["_null_sharpes"], bt["gated_results"]["ungated (trade every pick)"]["sharpe"],
                                 os.path.join(RESULTS_DIR, f"permutation_null_{freq}.png"),
-                                f"Best-pick vs. {N_PERMUTATIONS} random permutations ({freq} bars)")
+                                f"Best-pick vs. {cfg['n_permutations']} random permutations ({freq} bars)")
 
     json_out = {freq: {"discovery": r["discovery"], "backtest": clean(r["backtest"])} for freq, r in results.items()}
     with open(os.path.join(RESULTS_DIR, "summary.json"), "w") as f:
