@@ -130,6 +130,54 @@ def signals_from_rebalances(records, R: np.ndarray, tradable_idx: list[int]) -> 
     return raw
 
 
+def _event_driven_block(driver_ret: np.ndarray, sd: float, corr: float, lag: int, entry_z: float) -> np.ndarray:
+    """One rebalance block, one target. Fires a fixed-size directional bet only
+    when the driver's z-scored return crosses `entry_z`, holds it for exactly
+    `lag` bars (the discovered propagation window), then flattens -- instead of
+    continuously resizing the position every bar off the driver's latest return.
+    A new trigger while a position is already open overwrites it (most recent
+    information wins).
+
+    Pure-numpy forward-fill via cummax on indices -- no pandas Series
+    construction per block, which matters when this runs for ~1000 rebalances
+    x 3 targets per backtest call.
+    """
+    n = len(driver_ret)
+    z = driver_ret / sd
+    trigger = np.abs(z) >= entry_z
+    trigger_val = np.where(trigger, np.sign(corr) * np.sign(driver_ret), 0.0)
+
+    idx = np.arange(n)
+    last_trig_idx = np.maximum.accumulate(np.where(trigger, idx, 0))
+    last_trig_val = trigger_val[last_trig_idx]
+
+    age = idx - last_trig_idx
+    valid = (age >= 1) & (age <= lag)
+    return np.where(valid, last_trig_val, 0.0)
+
+
+def signals_from_rebalances_event_driven(records, R: np.ndarray, tradable_idx: list[int],
+                                          entry_z: float) -> np.ndarray:
+    """Event-driven counterpart to `signals_from_rebalances`: same driver/lag/corr
+    assignments (from `select_assignments` / `apply_confidence_gate`), but positions
+    are discrete trigger-and-hold bets instead of a continuously reweighted signal."""
+    T, n = R.shape
+    ntar = len(tradable_idx)
+    raw = np.zeros((T, ntar))
+    for rec in records:
+        s, e = rec["start"], rec["end"]
+        win_std = rec["window"].std(axis=0, ddof=1)
+        for j, ti in enumerate(tradable_idx):
+            if ti not in rec["assignment"]:
+                continue
+            driver, lag, corr = rec["assignment"][ti]
+            sd = win_std[driver]
+            if not (sd > 0):
+                continue
+            raw[s:e, j] = _event_driven_block(R[s:e, driver], sd, corr, lag, entry_z)
+    return raw
+
+
 def raw_signal_to_portfolio(raw: np.ndarray, target_rets: np.ndarray, annualization: float,
                              cost_bps: float, target_vol_annual: float = 0.15,
                              vol_lookback: int = 500, max_leverage: float = 3.0) -> pd.DataFrame:

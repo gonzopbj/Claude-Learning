@@ -59,9 +59,8 @@ def run_discovery(rets: pd.DataFrame, assets: list[str], max_lag: int) -> dict:
 
 
 def run_backtest_suite(rets: pd.DataFrame, assets: list[str], tradable_assets: list[str], cfg: dict,
+                        records, R: np.ndarray, tradable_idx: list[int],
                         n_permutations: int = N_PERMUTATIONS) -> dict:
-    records, R, tradable_idx = B.compute_rebalance_windows(
-        rets, assets, tradable_assets, window=cfg["window"], refresh=cfg["refresh"], max_lag=cfg["max_lag"])
     target_rets = R[:, tradable_idx]
     port_kwargs = dict(annualization=cfg["annualization"], cost_bps=cfg["cost_bps"],
                         target_vol_annual=cfg["target_vol_annual"], vol_lookback=cfg["vol_lookback"],
@@ -135,6 +134,57 @@ def run_backtest_suite(rets: pd.DataFrame, assets: list[str], tradable_assets: l
     }
 
 
+ENTRY_Z_SWEEP = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+
+
+def run_event_driven_suite(rets: pd.DataFrame, assets: list[str], tradable_assets: list[str], cfg: dict,
+                            records, R: np.ndarray, tradable_idx: list[int]) -> dict:
+    """Event-driven position sizing: enter a fixed-size bet only when the driver's
+    z-scored return crosses `entry_z`, hold for exactly the discovered lag, then
+    flatten -- instead of continuously resizing every bar off the driver's latest
+    return (the daily/continuous approach, which we found makes turnover -- and
+    therefore cost -- scale directly with bar count).
+
+    Run with cost_bps=0 throughout: the point of this section is to isolate
+    whether discretizing the position construction recovers the pre-cost edge
+    the continuous approach has (it does) at a turnover level that's actually
+    tradable, not to re-litigate the cost sensitivity already covered by
+    run_backtest_suite's cost_sensitivity_sharpe sweep.
+    """
+    target_rets = R[:, tradable_idx]
+    port_kwargs = dict(annualization=cfg["annualization"], cost_bps=0.0,
+                        target_vol_annual=cfg["target_vol_annual"], vol_lookback=cfg["vol_lookback"],
+                        max_leverage=cfg["max_leverage"])
+
+    best_assign = B.select_assignments(records, tradable_idx, len(assets), mode="best")
+    confidences = B.pick_confidence_distribution(best_assign)
+    p90_assign = B.apply_confidence_gate(best_assign, float(np.percentile(confidences, 90)))
+
+    sweep = {}
+    equity_curves = {}
+    for label, assign in [("ungated", best_assign), ("p90-confidence gate", p90_assign)]:
+        for ez in ENTRY_Z_SWEEP:
+            raw = B.signals_from_rebalances_event_driven(assign, R, tradable_idx, entry_z=ez)
+            port = B.raw_signal_to_portfolio(raw, target_rets, **port_kwargs)
+            metrics = B.performance_metrics(port["strategy_return"], cfg["annualization"])
+            metrics["mean_n_active"] = float(port["n_active"].mean())
+            metrics["mean_turnover"] = float(port["turnover"].mean())
+            key = f"{label} / entry_z={ez}"
+            sweep[key] = metrics
+            if label == "p90-confidence gate":
+                equity_curves[f"event-driven, entry_z={ez}"] = (1 + port["strategy_return"]).cumprod()
+
+    # continuous (existing approach) at the same zero-cost basis, for a fair comparison
+    raw_continuous = B.signals_from_rebalances(best_assign, R, tradable_idx)
+    port_continuous = B.raw_signal_to_portfolio(raw_continuous, target_rets, **port_kwargs)
+    equity_curves["continuous (ungated), zero cost"] = (1 + port_continuous["strategy_return"]).cumprod()
+
+    bh = B.buy_hold_baseline(rets, tradable_assets, cost_bps=0.0)
+    equity_curves["buy-hold baseline"] = (1 + bh["strategy_return"]).cumprod()
+
+    return {"sweep": sweep, "_equity_curves": equity_curves}
+
+
 def find_pair(all_sig_pairs, driver, target):
     for row in all_sig_pairs:
         if row["driver"] == driver and row["target"] == target:
@@ -180,6 +230,29 @@ def plot_equity_curves(equity_curves: dict, dates, path: str, title: str):
     plt.close(fig)
 
 
+def plot_event_driven_sweep(sweep: dict, path: str, title: str):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.5))
+    for label, color in [("ungated", "#4C72B0"), ("p90-confidence gate", "#C44E52")]:
+        zs = ENTRY_Z_SWEEP
+        sharpes = [sweep[f"{label} / entry_z={ez}"]["sharpe"] for ez in zs]
+        turnover = [sweep[f"{label} / entry_z={ez}"]["mean_turnover"] for ez in zs]
+        ax1.plot(zs, sharpes, marker="o", label=label, color=color)
+        ax2.plot(zs, turnover, marker="o", label=label, color=color)
+    ax1.axhline(0, color="black", linewidth=0.8)
+    ax1.set_xlabel("Entry threshold (driver z-score)")
+    ax1.set_ylabel("Annualized Sharpe (zero cost)")
+    ax1.set_title("Sharpe vs. entry threshold")
+    ax1.legend(fontsize=8)
+    ax2.set_xlabel("Entry threshold (driver z-score)")
+    ax2.set_ylabel("Mean turnover / bar")
+    ax2.set_title("Turnover vs. entry threshold")
+    ax2.legend(fontsize=8)
+    fig.suptitle(title)
+    fig.tight_layout()
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+
+
 def plot_null_distribution(null_sharpes, real_sharpe, path, title):
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.hist(null_sharpes, bins=30, color="#888888", alpha=0.8, label="Random driver/lag pick (null)")
@@ -217,7 +290,11 @@ def main():
         for row in disc["all_significant_pairs"]:
             print(f"  {row['driver']:15s} -> {row['target']:15s} lag={row['lag']:3d} corr={row['corr']:+.4f} q={row['qvalue']:.2e}")
 
-        bt = run_backtest_suite(rets, ALL_ASSETS, TRADABLE_ASSETS, cfg, n_permutations=cfg["n_permutations"])
+        records, R, tradable_idx = B.compute_rebalance_windows(
+            rets, ALL_ASSETS, TRADABLE_ASSETS, window=cfg["window"], refresh=cfg["refresh"], max_lag=cfg["max_lag"])
+
+        bt = run_backtest_suite(rets, ALL_ASSETS, TRADABLE_ASSETS, cfg, records, R, tradable_idx,
+                                 n_permutations=cfg["n_permutations"])
         for label, m in bt["gated_results"].items():
             print(f"  [{label}] sharpe={m['sharpe']:.3f} n_active={m['mean_n_active']:.2f} "
                   f"turnover={m['mean_turnover']:.3f} threshold={m['threshold_abs_corr']:.4f}")
@@ -227,7 +304,13 @@ def main():
               f"null p50={bt['null_sharpe_p50']:.3f}  "
               f"real(ungated) percentile in null={bt['real_sharpe_percentile_in_null']:.1f}%")
 
-        results[freq] = {"discovery": disc, "backtest": bt}
+        ed = run_event_driven_suite(rets, ALL_ASSETS, TRADABLE_ASSETS, cfg, records, R, tradable_idx)
+        print("  event-driven (zero cost):")
+        for key, m in ed["sweep"].items():
+            print(f"    [{key}] sharpe={m['sharpe']:.3f} turnover={m['mean_turnover']:.4f} "
+                  f"n_active={m['mean_n_active']:.3f}")
+
+        results[freq] = {"discovery": disc, "backtest": bt, "event_driven": ed}
 
         dates = rets.index[-len(list(bt["_equity_curves"].values())[0]):]
         plot_equity_curves(bt["_equity_curves"], dates,
@@ -239,8 +322,16 @@ def main():
         plot_null_distribution(bt["_null_sharpes"], bt["gated_results"]["ungated (trade every pick)"]["sharpe"],
                                 os.path.join(RESULTS_DIR, f"permutation_null_{freq}.png"),
                                 f"Best-pick vs. {cfg['n_permutations']} random permutations ({freq} bars)")
+        plot_event_driven_sweep(ed["sweep"],
+                                 os.path.join(RESULTS_DIR, f"event_driven_sweep_{freq}.png"),
+                                 f"Event-driven (hold-for-lag-bars) sizing, zero cost ({freq} bars)")
+        ed_dates = rets.index[-len(list(ed["_equity_curves"].values())[0]):]
+        plot_equity_curves(ed["_equity_curves"], ed_dates,
+                            os.path.join(RESULTS_DIR, f"equity_curves_event_driven_{freq}.png"),
+                            f"Event-driven vs. continuous sizing, zero cost ({freq} bars, BTC x2 + ETH)")
 
-    json_out = {freq: {"discovery": r["discovery"], "backtest": clean(r["backtest"])} for freq, r in results.items()}
+    json_out = {freq: {"discovery": r["discovery"], "backtest": clean(r["backtest"]),
+                        "event_driven": clean(r["event_driven"])} for freq, r in results.items()}
     with open(os.path.join(RESULTS_DIR, "summary.json"), "w") as f:
         json.dump(json_out, f, indent=2, default=str)
     print(f"\nWrote results to {RESULTS_DIR}")
