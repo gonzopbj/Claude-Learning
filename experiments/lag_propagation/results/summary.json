@@ -1,0 +1,450 @@
+{
+  "full": {
+    "discovery": {
+      "n_ordered_pairs": 552,
+      "n_pair_lag_tests": 5520,
+      "fdr_alpha": 0.05,
+      "n_significant_pair_lag_tests": 224,
+      "n_pairs_with_any_significant_lag": 175,
+      "pct_pairs_with_any_significant_lag": 31.7,
+      "lag_distribution_days": {
+        "1": 120,
+        "2": 3,
+        "3": 5,
+        "4": 11,
+        "5": 8,
+        "6": 4,
+        "7": 6,
+        "8": 6,
+        "9": 1,
+        "10": 11
+      },
+      "median_best_lag_days": 1.0,
+      "mean_abs_corr_significant": 0.07407212677676168,
+      "top_20_pairs": [
+        {
+          "driver": "fx_Singapore",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.22150966342085718,
+          "qvalue": 7.47218662170535e-77
+        },
+        {
+          "driver": "cmd_WTI",
+          "target": "cmd_Brent",
+          "lag": 1,
+          "corr": 0.20386736554335938,
+          "qvalue": 5.493155121579097e-65
+        },
+        {
+          "driver": "fx_Norway",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.20380261428482468,
+          "qvalue": 5.493155121579097e-65
+        },
+        {
+          "driver": "fx_Sweden",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.18473944769448544,
+          "qvalue": 4.654183694738102e-53
+        },
+        {
+          "driver": "fx_South_Africa",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.18424478296946326,
+          "qvalue": 7.360321568533185e-53
+        },
+        {
+          "driver": "fx_Euro",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.17650613904553866,
+          "qvalue": 2.0342295813158117e-48
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.1748576710718768,
+          "qvalue": 1.5064720273162832e-47
+        },
+        {
+          "driver": "fx_Denmark",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.17264061880960838,
+          "qvalue": 2.316828264130704e-46
+        },
+        {
+          "driver": "fx_Canada",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.17229510583961902,
+          "qvalue": 3.2081047842098876e-46
+        },
+        {
+          "driver": "fx_Australia",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.16591521489428887,
+          "qvalue": 8.757588605544009e-43
+        },
+        {
+          "driver": "fx_Mexico",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.16213600844024414,
+          "qvalue": 7.919231652220245e-41
+        },
+        {
+          "driver": "fx_New_Zealand",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.15549062780488257,
+          "qvalue": 1.8085107125279407e-37
+        },
+        {
+          "driver": "fx_South_Africa",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.1534081847930484,
+          "qvalue": 1.8050869984708782e-36
+        },
+        {
+          "driver": "fx_Australia",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.15291242926585094,
+          "qvalue": 2.9398632397005263e-36
+        },
+        {
+          "driver": "fx_Switzerland",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.15055197931448033,
+          "qvalue": 3.8812513862642063e-35
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_Australia",
+          "lag": 1,
+          "corr": 0.14854135260032847,
+          "qvalue": 3.3606816769127347e-34
+        },
+        {
+          "driver": "fx_Sweden",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.14812015418670893,
+          "qvalue": 5.019436560350173e-34
+        },
+        {
+          "driver": "fx_Brazil",
+          "target": "fx_Malaysia",
+          "lag": 1,
+          "corr": 0.13975293221375013,
+          "qvalue": 3.454533611088566e-30
+        },
+        {
+          "driver": "fx_Norway",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.13893673497669623,
+          "qvalue": 7.574205664843497e-30
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.1377981056968405,
+          "qvalue": 2.3003714003817233e-29
+        }
+      ],
+      "label": "full"
+    },
+    "backtest": {
+      "label": "full",
+      "strategy": {
+        "annualized_return": -0.18521106018412906,
+        "annualized_vol": 0.08553822449702862,
+        "sharpe": -2.165243214635146,
+        "max_drawdown": -0.9955633041552644,
+        "calmar": -0.18603644731690935,
+        "hit_rate": 0.40025041736227046,
+        "n_days": 7188
+      },
+      "strategy_no_cost": {
+        "annualized_return": 0.013944159603991507,
+        "annualized_vol": 0.08544305133480146,
+        "sharpe": 0.16319828688411986,
+        "max_drawdown": -0.3067597234891567,
+        "calmar": 0.04545629212788231,
+        "hit_rate": 0.4851140790205899,
+        "n_days": 7188
+      },
+      "strategy_smoothed": {
+        "annualized_return": -0.07805895206568424,
+        "annualized_vol": 0.0856783224270891,
+        "sharpe": -0.9110700332877218,
+        "max_drawdown": -0.9073307146516211,
+        "calmar": -0.08603142250690342,
+        "hit_rate": 0.4439343350027824,
+        "n_days": 7188
+      },
+      "momentum_baseline": {
+        "annualized_return": 0.022546430489444977,
+        "annualized_vol": 0.08470774579004227,
+        "sharpe": 0.26616728233246645,
+        "max_drawdown": -0.30430375169895085,
+        "calmar": 0.07409185842621575,
+        "hit_rate": 0.48887033945464664,
+        "n_days": 7188
+      },
+      "buy_hold_baseline": {
+        "annualized_return": 0.023620832811631614,
+        "annualized_vol": 0.054584195139531444,
+        "sharpe": 0.43274124957326204,
+        "max_drawdown": -0.145030065630951,
+        "calmar": 0.162868524597776,
+        "hit_rate": 0.5025041736227045,
+        "n_days": 7188
+      },
+      "n_permutations": 200,
+      "permutation_runtime_sec": 53.0,
+      "null_sharpe_mean": -2.8214130524753807,
+      "null_sharpe_std": 0.18514096965731827,
+      "null_sharpe_p05": -3.157651857794637,
+      "null_sharpe_p50": -2.8180827629304286,
+      "null_sharpe_p95": -2.514851922621916,
+      "real_sharpe_percentile_in_null": 100.0,
+      "_turnover_mean": 2.6343283040756695
+    }
+  },
+  "ex_managed_fx": {
+    "discovery": {
+      "n_ordered_pairs": 420,
+      "n_pair_lag_tests": 4200,
+      "fdr_alpha": 0.05,
+      "n_significant_pair_lag_tests": 156,
+      "n_pairs_with_any_significant_lag": 115,
+      "pct_pairs_with_any_significant_lag": 27.38,
+      "lag_distribution_days": {
+        "1": 72,
+        "2": 2,
+        "3": 5,
+        "4": 6,
+        "5": 8,
+        "6": 3,
+        "7": 5,
+        "8": 5,
+        "9": 1,
+        "10": 8
+      },
+      "median_best_lag_days": 1.0,
+      "mean_abs_corr_significant": 0.06972780695968217,
+      "top_20_pairs": [
+        {
+          "driver": "cmd_WTI",
+          "target": "cmd_Brent",
+          "lag": 1,
+          "corr": 0.20386736554335938,
+          "qvalue": 1.135392496160938e-64
+        },
+        {
+          "driver": "fx_South_Africa",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.1534081847930484,
+          "qvalue": 8.92733243808967e-36
+        },
+        {
+          "driver": "fx_Australia",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.15291242926585094,
+          "qvalue": 1.043864483661781e-35
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_Australia",
+          "lag": 1,
+          "corr": 0.14854135260032847,
+          "qvalue": 1.0228161625386584e-33
+        },
+        {
+          "driver": "fx_Sweden",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.14812015418670893,
+          "qvalue": 1.2985064145253708e-33
+        },
+        {
+          "driver": "fx_Norway",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.13893673497669623,
+          "qvalue": 1.824944480840915e-29
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.1377981056968405,
+          "qvalue": 5.000807392134181e-29
+        },
+        {
+          "driver": "fx_Mexico",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.13560700476782772,
+          "qvalue": 3.9843894980969443e-28
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_Canada",
+          "lag": 1,
+          "corr": 0.13511853976301,
+          "qvalue": 5.766677478764701e-28
+        },
+        {
+          "driver": "fx_New_Zealand",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.13242711153806225,
+          "qvalue": 7.374272919146394e-27
+        },
+        {
+          "driver": "fx_Canada",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.12955126396629366,
+          "qvalue": 1.0757437731431857e-25
+        },
+        {
+          "driver": "fx_Euro",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.12408668011433889,
+          "qvalue": 1.6224527101871185e-23
+        },
+        {
+          "driver": "fx_Denmark",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.12275050589218345,
+          "qvalue": 5.0416351827262564e-23
+        },
+        {
+          "driver": "vol_VIX",
+          "target": "fx_New_Zealand",
+          "lag": 1,
+          "corr": 0.1197952880652705,
+          "qvalue": 6.543188936001072e-22
+        },
+        {
+          "driver": "fx_Singapore",
+          "target": "fx_Taiwan",
+          "lag": 1,
+          "corr": 0.11748070474957165,
+          "qvalue": 4.604991470011896e-21
+        },
+        {
+          "driver": "fx_Sweden",
+          "target": "fx_Taiwan",
+          "lag": 1,
+          "corr": 0.11651796266330593,
+          "qvalue": 9.887030055635492e-21
+        },
+        {
+          "driver": "fx_Brazil",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.11517057720768949,
+          "qvalue": 2.933379652861069e-20
+        },
+        {
+          "driver": "fx_Euro",
+          "target": "fx_Taiwan",
+          "lag": 1,
+          "corr": 0.11438201409877706,
+          "qvalue": 5.3909033703349553e-20
+        },
+        {
+          "driver": "fx_Singapore",
+          "target": "fx_South_Korea",
+          "lag": 1,
+          "corr": 0.11280937349537236,
+          "qvalue": 1.9002158075178554e-19
+        },
+        {
+          "driver": "fx_Denmark",
+          "target": "fx_Taiwan",
+          "lag": 1,
+          "corr": 0.11134173841280774,
+          "qvalue": 6.051828254884238e-19
+        }
+      ],
+      "label": "ex_managed_fx"
+    },
+    "backtest": {
+      "label": "ex_managed_fx",
+      "strategy": {
+        "annualized_return": -0.17969774968941277,
+        "annualized_vol": 0.08558754415806806,
+        "sharpe": -2.09957829094309,
+        "max_drawdown": -0.9948784006462109,
+        "calmar": -0.18062282744573843,
+        "hit_rate": 0.40943238731218695,
+        "n_days": 7188
+      },
+      "strategy_no_cost": {
+        "annualized_return": -0.002790762090268853,
+        "annualized_vol": 0.08541860265624225,
+        "sharpe": -0.03267159615686957,
+        "max_drawdown": -0.3473303984730921,
+        "calmar": -0.008034891568769657,
+        "hit_rate": 0.4794101279910963,
+        "n_days": 7188
+      },
+      "strategy_smoothed": {
+        "annualized_return": -0.07991505754829825,
+        "annualized_vol": 0.08531355824045264,
+        "sharpe": -0.9367216559302456,
+        "max_drawdown": -0.9147481772861467,
+        "calmar": -0.08736290438466722,
+        "hit_rate": 0.4439343350027824,
+        "n_days": 7188
+      },
+      "momentum_baseline": {
+        "annualized_return": 0.021254731283654203,
+        "annualized_vol": 0.08505115626546282,
+        "sharpe": 0.24990525957476284,
+        "max_drawdown": -0.3241440036634613,
+        "calmar": 0.06557187868180242,
+        "hit_rate": 0.488174735670562,
+        "n_days": 7188
+      },
+      "buy_hold_baseline": {
+        "annualized_return": 0.027277598896383416,
+        "annualized_vol": 0.06146872384731299,
+        "sharpe": 0.44376387191867517,
+        "max_drawdown": -0.15786390480368806,
+        "calmar": 0.17279186733854407,
+        "hit_rate": 0.5038953811908736,
+        "n_days": 7188
+      },
+      "n_permutations": 200,
+      "permutation_runtime_sec": 47.3,
+      "null_sharpe_mean": -2.512021566335787,
+      "null_sharpe_std": 0.18477059860751877,
+      "null_sharpe_p05": -2.7773813922406307,
+      "null_sharpe_p50": -2.493451553124074,
+      "null_sharpe_p95": -2.2125979068201196,
+      "real_sharpe_percentile_in_null": 99.5,
+      "_turnover_mean": 2.3400395185071945
+    }
+  }
+}
