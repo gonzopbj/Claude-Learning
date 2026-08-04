@@ -9,12 +9,17 @@ since a "1-day" lag at daily resolution could just mean the real window is
 hours, not days.
 
 **Short answer:** going faster does reveal a much stronger, cleaner,
-mechanistically sensible propagation signal — but it makes the
-transaction-cost problem *worse*, not better, because costs scale with bar
-count and the edge doesn't. Confidence gating helps, monotonically and
-substantially, at both frequencies — but "helps" here means "less
-catastrophically unprofitable," not profitable. Even trading only the top
-10% most-confident signals loses money after realistic costs.
+mechanistically sensible propagation signal — but naively re-pricing a
+position every single bar makes the transaction-cost problem *worse*, not
+better, because turnover scales with bar count and the edge doesn't.
+Confidence gating helps a continuously-resized position, monotonically and
+substantially — but not enough to reach profitability on its own at
+realistic (5bps) crypto costs. Switching to an event-driven position style
+(enter only when a driver crosses a threshold, hold for exactly the
+discovered lag, then exit — section 5) cuts turnover 6–40x and gets the
+tolerable cost up to roughly 0.3–1.3bps: real progress, and enough to work
+under institutional/maker-level execution, but still short of the 5bps
+retail assumption used elsewhere in this report.
 
 ## Data and universe
 
@@ -180,26 +185,94 @@ lag≈1 (which dominates the significant-pair table anyway) fairly often too.
 This is a real limitation of testing on a 3-node graph rather than a
 weakness in the method itself.
 
+## 5. Event-driven sizing: does it fix the turnover problem?
+
+Round three. Instead of continuously resizing every bar off the driver's
+latest lagged return, `signals_from_rebalances_event_driven` only opens a
+fixed-size position when the driver's z-scored return crosses an entry
+threshold, holds it for exactly the discovered lag, then flattens — trades
+per *event*, not trades per *bar*. Swept the entry threshold (0.5–3.0 std)
+at both the ungated and p90-gated driver/lag selection.
+
+**This section assumes zero trading cost throughout**, to isolate the
+question "does discretizing the position recover a tradable-turnover
+version of the edge?" from the cost question section 3 already answered.
+Turnover and a breakeven-cost estimate are reported alongside Sharpe so the
+zero-cost numbers aren't mistaken for a profitability claim.
+
+![event-driven sweep, minute](event_driven_sweep_minute.png)
+
+| Config (minute bars) | Sharpe (zero cost) | Turnover/bar | Breakeven cost |
+|---|---:|---:|---:|
+| Continuous, ungated (for reference) | +27.9 | 0.386 | 0.03bps |
+| Event-driven, ungated, entry_z=0.5 | **+18.1** | 0.257 | 0.29bps |
+| Event-driven, ungated, entry_z=1.0 | +14.6 | 0.180 | 0.35bps |
+| Event-driven, p90-gate, entry_z=0.5 | +13.1 | 0.062 | **0.70bps** |
+| Event-driven, p90-gate, entry_z=1.0 | +12.5 | 0.045 | **0.93bps** |
+| Event-driven, p90-gate, entry_z=2.0 | +6.9 | 0.021 | **1.11bps** |
+
+(Breakeven cost = the flat per-turnover cost that would exactly cancel the
+zero-cost annualized return, given that configuration's actual turnover —
+read directly off the numbers above, not a separate simulation.)
+
+Discretizing the position construction cuts turnover by roughly **6–40x**
+relative to the continuous approach depending on entry threshold, at the
+cost of giving up some raw Sharpe (28 → 18 at the loosest gate). Turnover
+and Sharpe trade off cleanly against the entry threshold: tighter entry
+(higher z) means fewer, more confident trades, lower turnover, lower Sharpe.
+Combining event-driven entry with p90 confidence gating pushes the
+turnover-to-Sharpe ratio further in the right direction — a bit less Sharpe
+than ungated (13.1 vs 18.1) for roughly a quarter of the turnover — and
+raises the breakeven cost tolerance from ~0.03bps (continuous) to ~0.7–1.1bps.
+
+That's the real result: **event-driven sizing closes most of the gap but
+not all of it.** The daily/hourly experiments assumed 5bps in realistic
+crypto taker fees; even the best breakeven cost found here (~1.3bps at
+p90-gate/entry_z=3.0) is still roughly 4x too low to clear that bar. It
+would clear a low-cost maker-fee or institutional-execution assumption
+(sub-1bp), which is a materially different, more specific claim than "this
+doesn't work" — the honest updated statement is "this needs near-institutional
+execution costs to work, not retail taker fees," which is a real, testable
+precondition rather than a dead end.
+
+![event-driven equity curves, minute](equity_curves_event_driven_minute.png)
+
+Interesting secondary finding: at minute frequency, p90 confidence gating
+gives up more Sharpe than it saves in turnover relative to just loosening
+the entry threshold (compare p90-gate/entry_z=0.5's 13.1 to
+ungated/entry_z=1.0's 14.6 at *less* turnover: 0.045 vs 0.062). Once the
+entry threshold is already filtering for large driver moves, the
+correlation-based gate is doing partially redundant filtering — for this
+event-driven style, the entry threshold alone is closer to the efficient
+frontier than stacking both filters. That's the opposite of what section 2
+found for continuous sizing, where confidence gating was the main lever.
+Which filter matters more depends on the position-construction style, not
+just on "is this a good signal."
+
 ## Bottom line
 
 - **The "go faster" hypothesis was directionally right about signal
   quality**: 1-minute bars surface a stronger, cleaner, more interpretable
   propagation effect than daily or hourly bars did, including a textbook
   cross-exchange arbitrage signature between the two BTC venues.
-- **It was wrong about tradability**: turnover cost scales with bar count in
-  a continuous-reweighting implementation, and it scales faster than the
-  edge does. Pre-cost Sharpe of +28 at 1-minute resolution becomes -58 at
-  just 1bp of cost.
-- **Confidence gating works as hypothesized** — monotonic, sizeable Sharpe
-  improvement from being selective — but it's not sufficient on its own to
-  cross into profitability at either frequency tested here.
-- The clear next lever, not yet tried: stop re-sizing positions every single
-  bar. An event-driven implementation (enter a fixed-size position only when
-  a driver's move crosses a threshold, hold for exactly the discovered lag,
-  then exit) would cut turnover roughly to "trades per event" instead of
-  "trades per bar," decoupling cost from bar count in a way gating and
-  smoothing (tested and found to *destroy* the edge, since it isn't
-  persistent — see the daily experiment) don't.
+- **Continuous sizing was wrong about tradability**: turnover cost scales
+  with bar count and outpaces the edge. Pre-cost Sharpe of +28 at 1-minute
+  resolution becomes -58 at just 1bp of cost.
+- **Confidence gating works as hypothesized** for continuous sizing —
+  monotonic, sizeable Sharpe improvement from being selective.
+- **Event-driven sizing (enter on threshold, hold for the discovered lag,
+  exit) recovers most of the edge at a fraction of the turnover** — Sharpe
+  13–18 (zero cost) at turnover 6–40x lower than continuous sizing. It
+  raises the tolerable cost from ~0.03bps to ~0.3–1.3bps, which is real
+  progress but still roughly 4x short of the 5bps retail crypto taker fee
+  used in section 3. The updated, more precise claim: this needs
+  institutional/maker-level execution costs, not a fundamentally different
+  strategy.
+- For continuous sizing, confidence gating is the main lever. For
+  event-driven sizing, the entry threshold itself already does most of that
+  filtering — stacking both gives up more Sharpe than it saves in turnover.
+  Worth checking which filter matters before assuming "more selective is
+  always better."
 
 ## Reproduce
 
