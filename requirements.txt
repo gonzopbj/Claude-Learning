@@ -1,0 +1,24 @@
+# Core — needed from month 1
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+matplotlib>=3.7
+networkx>=3.0
+scikit-learn>=1.3
+jupyter
+pytest
+
+# PyTorch — install the CUDA build from pytorch.org, NOT via this file.
+# A blind `pip install torch` may give you a CPU-only build.
+# torch
+# torchvision
+
+# Causal libraries — not needed until month 3+.
+# causal-learn can be awkward to install; leave it until you need it.
+# causal-learn>=0.1.3
+# dowhy>=0.11
+# econml>=0.15
+# doubleml>=0.7
+
+# Month 10+
+# gymnasium
