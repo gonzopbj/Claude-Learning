@@ -11,7 +11,7 @@
 **Causal track:** Structural causal models — not started
 **ML track:** Backprop from scratch (micrograd) — not started
 **Started:** _(date)_
-**Last session:** —
+**Last session:** 2026-09-20 (a question about attention and causality; no track work started)
 
 **Next target:** SCM simulator in numpy (C1), and follow micrograd part 1.
 
@@ -47,7 +47,9 @@ _Nothing yet._
 
 Left unresolved at the end of a session. Claude raises these first next time.
 
-_None yet._
+- **2026-09-20 — "Is there an attention mechanism trained for causality?"** Answered at landscape level: every such model imports its causal information from somewhere other than the observational data (a simulator with known graphs, a given DAG used as the attention mask, an assumed unconfoundedness plus a balancing loss, or interventional data), because distribution-to-graph is not a function. Not resolvable properly until attention is built (ML M7) and CRL is reached (M11). Two follow-ups:
+  - After C2: on a fork where Z causes both X and Y, a head attending from Y to X with a large weight has learned what about whether X causes Y? Answer it from the six numbers.
+  - At M7 or later: log AVICI (Lorch et al. 2022) and CATT (Yang et al. 2021) in `notes/papers.md` with the three-sentence judgement. Check whether CATT's "mediator" satisfies the front-door conditions from M3.
 
 ---
 
