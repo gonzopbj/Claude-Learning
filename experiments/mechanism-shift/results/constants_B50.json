@@ -1,0 +1,255 @@
+{
+  "spec_version": "v2",
+  "validation_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009
+  ],
+  "created_utc": "2026-09-21T06:33:42Z",
+  "lambda": 4.758867263793945,
+  "lambda_details": {
+    "lambda": 4.758867263793945,
+    "target_false_reset_rate": 0.01,
+    "pooled_exceedance_rate_at_lambda": 0.009887005649717515,
+    "resimulated_false_reset_rate_at_lambda": 0.007344632768361582,
+    "resimulation_used": true,
+    "resimulation_max_abs_discrepancy_vs_stored_g": 3.337860107421875e-06,
+    "n_tested_mechanism_episodes": 3540,
+    "n_seeds": 10,
+    "rate_curve": [
+      {
+        "quantile": 50,
+        "lambda": 0.0,
+        "pooled_rate": 0.08305084745762711,
+        "resim_rate": 0.06807909604519774
+      },
+      {
+        "quantile": 90,
+        "lambda": 0.0,
+        "pooled_rate": 0.08305084745762711,
+        "resim_rate": 0.06807909604519774
+      },
+      {
+        "quantile": 95,
+        "lambda": 0.9309856444597221,
+        "pooled_rate": 0.05,
+        "resim_rate": 0.039265536723163845
+      },
+      {
+        "quantile": 99,
+        "lambda": 4.73411977291108,
+        "pooled_rate": 0.010169491525423728,
+        "resim_rate": 0.007627118644067797
+      },
+      {
+        "quantile": 99.9,
+        "lambda": 69.58647277069116,
+        "pooled_rate": 0.0011299435028248588,
+        "resim_rate": 0.0002824858757062147
+      }
+    ],
+    "method": "smallest stored g value at which both mean(g > lambda) over the never-reset no-shift run and the offline Page-Hinkley re-simulation from GLR_t give <= target false resets per tested mechanism-episode",
+    "false_reset_rate_at_lambda": 0.020155038759689922,
+    "recall_at_lambda": 1.0,
+    "grid_multipliers": [
+      0.5,
+      1,
+      2,
+      4,
+      8
+    ],
+    "roc": [
+      {
+        "multiplier": 0.5,
+        "lambda": 2.3794336318969727,
+        "recall_window": 1.0,
+        "recall_any": 1.0,
+        "accuracy_delay0": 1.0,
+        "false_reset_rate": 0.03875968992248062,
+        "misattribution_rate": 0.5866666666666667,
+        "n_shifts": 65,
+        "n_resets": 250
+      },
+      {
+        "multiplier": 1,
+        "lambda": 4.758867263793945,
+        "recall_window": 1.0,
+        "recall_any": 1.0,
+        "accuracy_delay0": 1.0,
+        "false_reset_rate": 0.020155038759689922,
+        "misattribution_rate": 0.49809523809523804,
+        "n_shifts": 65,
+        "n_resets": 184
+      },
+      {
+        "multiplier": 2,
+        "lambda": 9.51773452758789,
+        "recall_window": 1.0,
+        "recall_any": 1.0,
+        "accuracy_delay0": 1.0,
+        "false_reset_rate": 0.011627906976744184,
+        "misattribution_rate": 0.4671428571428571,
+        "n_shifts": 65,
+        "n_resets": 152
+      },
+      {
+        "multiplier": 4,
+        "lambda": 19.03546905517578,
+        "recall_window": 1.0,
+        "recall_any": 1.0,
+        "accuracy_delay0": 0.9857142857142858,
+        "false_reset_rate": 0.008527131782945736,
+        "misattribution_rate": 0.4671428571428571,
+        "n_shifts": 65,
+        "n_resets": 143
+      },
+      {
+        "multiplier": 8,
+        "lambda": 38.07093811035156,
+        "recall_window": 1.0,
+        "recall_any": 1.0,
+        "accuracy_delay0": 0.949047619047619,
+        "false_reset_rate": 0.00813953488372093,
+        "misattribution_rate": 0.4076190476190476,
+        "n_shifts": 65,
+        "n_resets": 134
+      }
+    ]
+  },
+  "agents": {
+    "marginal-mean": {
+      "tau": null
+    },
+    "obs-window": {
+      "W": 1,
+      "tau": 0.8335104584693909
+    },
+    "obs-cumulative": {
+      "tau": 0.2532491385936737
+    },
+    "int-pairwise": {
+      "W": 3,
+      "tau": 2.4646804332733154
+    },
+    "mech-full": {
+      "tau": 0.3076980412006378
+    },
+    "mech-random": {
+      "tau": 0.32158881425857544
+    },
+    "mech-full-nofloor": {
+      "tau": 0.337624192237854
+    },
+    "mech-reset-all": {
+      "tau": 0.4162448048591614
+    },
+    "mech-no-detect": {
+      "gamma": 0.5,
+      "tau": 0.5341511964797974
+    },
+    "mech-oracle-detect": {
+      "tau": 0.2662751078605652
+    },
+    "mech-overconfident": {
+      "tau": 0.3286043703556061
+    },
+    "oracle-structure": {
+      "tau": 0.2566886842250824
+    },
+    "oracle": {
+      "tau": null
+    },
+    "mech-full-diag": {
+      "tau": 0.3076980412006378
+    }
+  },
+  "tuning": {
+    "obs-window": {
+      "key": "W",
+      "best": 1,
+      "grid": [
+        {
+          "W": 1,
+          "nmse": 0.14195859730700303
+        },
+        {
+          "W": 2,
+          "nmse": 0.14252809892673107
+        },
+        {
+          "W": 3,
+          "nmse": 0.14803379259460558
+        },
+        {
+          "W": 5,
+          "nmse": 0.16172229317169784
+        }
+      ]
+    },
+    "int-pairwise": {
+      "key": "W",
+      "best": 3,
+      "grid": [
+        {
+          "W": 3,
+          "nmse": 0.07581871021117968
+        },
+        {
+          "W": 5,
+          "nmse": 0.07872766047547236
+        },
+        {
+          "W": 8,
+          "nmse": 0.10016576785920646
+        },
+        {
+          "W": 12,
+          "nmse": 0.13063277657852163
+        }
+      ]
+    },
+    "mech-no-detect": {
+      "key": "gamma",
+      "best": 0.5,
+      "grid": [
+        {
+          "gamma": 0.5,
+          "nmse": 0.04542673622411121
+        },
+        {
+          "gamma": 0.7,
+          "nmse": 0.06145742372458936
+        },
+        {
+          "gamma": 0.9,
+          "nmse": 0.11820078655481417
+        }
+      ]
+    }
+  },
+  "tau_percentile": 90.0,
+  "run_parameters": {
+    "episodes": 60,
+    "budget": 50,
+    "n_obs": 200,
+    "n_queries": 200,
+    "shift_type": "large",
+    "hetero": 0,
+    "hidden": false
+  },
+  "notes": [
+    "mech-full-diag is hidden-only and was not run on validation; its tau is copied from mech-full.",
+    "marginal-mean and oracle never abstain (tau = null).",
+    "lambda chosen from a no-shift mech-full run at lambda = inf; see lambda_details.method.  The offline Page-Hinkley re-simulation ignores that a real fire also truncates the buffer, so false_reset_rate_at_lambda (from the with-shifts run at lambda*) is the empirical check."
+  ],
+  "git_hash": "00c5011bebe725d1a4ad0d3afe4cd0e404a3930d",
+  "total_core_seconds": 1678.4813241958618,
+  "wall_seconds": 427.64200558899995
+}
