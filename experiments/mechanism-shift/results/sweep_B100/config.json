@@ -1,0 +1,393 @@
+{
+  "run_name": "sweep_B100",
+  "agents": [
+    "mech-full",
+    "mech-random",
+    "int-pairwise"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "episodes": 60,
+  "budget": 100,
+  "n_obs": 200,
+  "n_queries": 200,
+  "shift_type": "large",
+  "hetero": 0,
+  "hidden": false,
+  "shifts_enabled": true,
+  "workers": 4,
+  "smoke": false,
+  "d": 6,
+  "constants_path": "results/constants_B100.json",
+  "constants_sha256": "c26b660d5d416d2bd5a84665dfb136d558aa16d9e8f70091034ddb736a84ed5c",
+  "constants": {
+    "spec_version": "v2",
+    "validation_seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ],
+    "created_utc": "2026-09-21T06:44:39Z",
+    "lambda": 4.758867263793945,
+    "lambda_details": {
+      "lambda": 4.758867263793945,
+      "method": "fixed: reused from the B = 50 calibration (SPEC: one lambda for every detector agent)",
+      "pooled_exceedance_rate_at_lambda": null,
+      "resimulated_false_reset_rate_at_lambda": null,
+      "false_reset_rate_at_lambda": 0.03604651162790697,
+      "recall_at_lambda": 1.0,
+      "grid_multipliers": [
+        0.5,
+        1,
+        2,
+        4,
+        8
+      ],
+      "roc": [
+        {
+          "multiplier": 0.5,
+          "lambda": 2.3794336318969727,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.056589147286821705,
+          "misattribution_rate": 0.5266666666666666,
+          "n_shifts": 65,
+          "n_resets": 290
+        },
+        {
+          "multiplier": 1,
+          "lambda": 4.758867263793945,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.03604651162790697,
+          "misattribution_rate": 0.4699999999999999,
+          "n_shifts": 65,
+          "n_resets": 220
+        },
+        {
+          "multiplier": 2,
+          "lambda": 9.51773452758789,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.021317829457364337,
+          "misattribution_rate": 0.3938095238095237,
+          "n_shifts": 65,
+          "n_resets": 174
+        },
+        {
+          "multiplier": 4,
+          "lambda": 19.03546905517578,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9857142857142858,
+          "false_reset_rate": 0.013953488372093023,
+          "misattribution_rate": 0.3795238095238095,
+          "n_shifts": 65,
+          "n_resets": 147
+        },
+        {
+          "multiplier": 8,
+          "lambda": 38.07093811035156,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9633333333333333,
+          "false_reset_rate": 0.008914728682170543,
+          "misattribution_rate": 0.3509523809523809,
+          "n_shifts": 65,
+          "n_resets": 130
+        }
+      ]
+    },
+    "agents": {
+      "marginal-mean": {
+        "tau": null
+      },
+      "obs-window": {
+        "W": 1,
+        "tau": 0.8335104584693909
+      },
+      "obs-cumulative": {
+        "tau": 0.2532491385936737
+      },
+      "int-pairwise": {
+        "W": 3,
+        "tau": 1.7468414306640625
+      },
+      "mech-full": {
+        "tau": 0.2900194823741913
+      },
+      "mech-random": {
+        "tau": 0.2918359339237213
+      },
+      "mech-full-nofloor": {
+        "tau": 0.3135038912296295
+      },
+      "mech-reset-all": {
+        "tau": 0.42871299386024475
+      },
+      "mech-no-detect": {
+        "gamma": 0.5,
+        "tau": 0.4930591881275177
+      },
+      "mech-oracle-detect": {
+        "tau": 0.24090558290481567
+      },
+      "mech-overconfident": {
+        "tau": 0.29048290848731995
+      },
+      "oracle-structure": {
+        "tau": 0.2312106341123581
+      },
+      "oracle": {
+        "tau": null
+      },
+      "mech-full-diag": {
+        "tau": 0.2900194823741913
+      }
+    },
+    "tuning": {
+      "obs-window": {
+        "key": "W",
+        "best": 1,
+        "grid": [
+          {
+            "W": 1,
+            "nmse": 0.14195859730700303
+          },
+          {
+            "W": 2,
+            "nmse": 0.14252809892673107
+          },
+          {
+            "W": 3,
+            "nmse": 0.14803379259460558
+          },
+          {
+            "W": 5,
+            "nmse": 0.16172229317169784
+          }
+        ]
+      },
+      "int-pairwise": {
+        "key": "W",
+        "best": 3,
+        "grid": [
+          {
+            "W": 3,
+            "nmse": 0.0476262101108627
+          },
+          {
+            "W": 5,
+            "nmse": 0.06125124500631292
+          },
+          {
+            "W": 8,
+            "nmse": 0.08880692274843473
+          },
+          {
+            "W": 12,
+            "nmse": 0.12149322717181663
+          }
+        ]
+      },
+      "mech-no-detect": {
+        "key": "gamma",
+        "best": 0.5,
+        "grid": [
+          {
+            "gamma": 0.5,
+            "nmse": 0.0346036657744284
+          },
+          {
+            "gamma": 0.7,
+            "nmse": 0.05136641177347082
+          },
+          {
+            "gamma": 0.9,
+            "nmse": 0.1123126868593809
+          }
+        ]
+      }
+    },
+    "tau_percentile": 90.0,
+    "run_parameters": {
+      "episodes": 60,
+      "budget": 100,
+      "n_obs": 200,
+      "n_queries": 200,
+      "shift_type": "large",
+      "hetero": 0,
+      "hidden": false
+    },
+    "notes": [
+      "mech-full-diag is hidden-only and was not run on validation; its tau is copied from mech-full.",
+      "marginal-mean and oracle never abstain (tau = null).",
+      "lambda chosen from a no-shift mech-full run at lambda = inf; see lambda_details.method.  The offline Page-Hinkley re-simulation ignores that a real fire also truncates the buffer, so false_reset_rate_at_lambda (from the with-shifts run at lambda*) is the empirical check."
+    ],
+    "git_hash": "2983f0cbba0f9180524e616234d5986d9fc3d35b",
+    "total_core_seconds": 1048.6015419960022,
+    "wall_seconds": 265.28395431900003
+  },
+  "git_hash": "99ab19807a422cac184019a92f888ecd564ac742",
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "n_jobs": 60,
+  "started_utc": "2026-09-21T06:48:04Z",
+  "finished_utc": "2026-09-21T06:48:45Z",
+  "total_wall_s": 40.80049730099995,
+  "wall_time_s": {
+    "mech-full__seed0": 2.8756377696990967,
+    "mech-full__seed1": 2.9487051963806152,
+    "mech-full__seed2": 3.0640780925750732,
+    "mech-full__seed3": 2.884493589401245,
+    "mech-full__seed4": 2.882514476776123,
+    "mech-full__seed5": 2.9211134910583496,
+    "mech-full__seed6": 2.886119842529297,
+    "mech-full__seed7": 2.897143840789795,
+    "mech-full__seed8": 2.996722936630249,
+    "mech-full__seed9": 3.031778573989868,
+    "mech-full__seed10": 2.9068443775177,
+    "mech-full__seed11": 2.985863447189331,
+    "mech-full__seed12": 2.979253053665161,
+    "mech-full__seed13": 2.8477060794830322,
+    "mech-full__seed14": 2.8697502613067627,
+    "mech-full__seed15": 2.977440118789673,
+    "mech-full__seed16": 2.82790207862854,
+    "mech-full__seed17": 3.0048391819000244,
+    "mech-full__seed18": 2.937985897064209,
+    "mech-full__seed19": 2.951631784439087,
+    "mech-random__seed0": 2.6402182579040527,
+    "mech-random__seed1": 2.6592371463775635,
+    "mech-random__seed2": 2.6100261211395264,
+    "mech-random__seed3": 2.653703212738037,
+    "mech-random__seed4": 2.567296266555786,
+    "mech-random__seed5": 2.542226791381836,
+    "mech-random__seed6": 2.581740379333496,
+    "mech-random__seed7": 2.605219841003418,
+    "mech-random__seed8": 2.5663230419158936,
+    "mech-random__seed9": 2.533860206604004,
+    "mech-random__seed10": 2.6470754146575928,
+    "mech-random__seed11": 2.672748327255249,
+    "mech-random__seed12": 2.528588056564331,
+    "mech-random__seed13": 2.5869107246398926,
+    "mech-random__seed14": 2.5633373260498047,
+    "mech-random__seed15": 2.7347464561462402,
+    "mech-random__seed16": 2.898245096206665,
+    "mech-random__seed17": 2.598433017730713,
+    "mech-random__seed18": 2.6842880249023438,
+    "mech-random__seed19": 2.5975730419158936,
+    "int-pairwise__seed0": 2.407522678375244,
+    "int-pairwise__seed1": 2.495790719985962,
+    "int-pairwise__seed2": 2.2517549991607666,
+    "int-pairwise__seed3": 2.2497801780700684,
+    "int-pairwise__seed4": 2.3040738105773926,
+    "int-pairwise__seed5": 2.2586705684661865,
+    "int-pairwise__seed6": 2.3639729022979736,
+    "int-pairwise__seed7": 2.254035234451294,
+    "int-pairwise__seed8": 2.323516607284546,
+    "int-pairwise__seed9": 2.3124587535858154,
+    "int-pairwise__seed10": 2.4096083641052246,
+    "int-pairwise__seed11": 2.2676429748535156,
+    "int-pairwise__seed12": 2.395477056503296,
+    "int-pairwise__seed13": 2.3331170082092285,
+    "int-pairwise__seed14": 2.284642457962036,
+    "int-pairwise__seed15": 2.3285930156707764,
+    "int-pairwise__seed16": 2.263479471206665,
+    "int-pairwise__seed17": 2.263338804244995,
+    "int-pairwise__seed18": 2.2653613090515137,
+    "int-pairwise__seed19": 2.389347553253174
+  },
+  "job_time_s": {
+    "mech-full__seed0": 3.1193457289998605,
+    "mech-full__seed1": 3.2124297139998816,
+    "mech-full__seed2": 3.283237460999999,
+    "mech-full__seed3": 3.137155928000084,
+    "mech-full__seed4": 2.9463162790000297,
+    "mech-full__seed5": 2.9740544189999127,
+    "mech-full__seed6": 2.9368121390000397,
+    "mech-full__seed7": 2.9524769960000867,
+    "mech-full__seed8": 3.056877547000113,
+    "mech-full__seed9": 3.0792885529999694,
+    "mech-full__seed10": 2.9982042540000293,
+    "mech-full__seed11": 3.0416033880001123,
+    "mech-full__seed12": 3.0290376150001066,
+    "mech-full__seed13": 2.9015569339999274,
+    "mech-full__seed14": 2.9174833529998523,
+    "mech-full__seed15": 3.029139442999849,
+    "mech-full__seed16": 2.881519620000063,
+    "mech-full__seed17": 3.054810297000131,
+    "mech-full__seed18": 2.9882392849999633,
+    "mech-full__seed19": 3.00680357300007,
+    "mech-random__seed0": 2.6937929439998243,
+    "mech-random__seed1": 2.713974358000087,
+    "mech-random__seed2": 2.6589988539999467,
+    "mech-random__seed3": 2.7116714839999077,
+    "mech-random__seed4": 2.6242246959998283,
+    "mech-random__seed5": 2.596784802000002,
+    "mech-random__seed6": 2.6339531579999402,
+    "mech-random__seed7": 2.661358534000101,
+    "mech-random__seed8": 2.6281974309999896,
+    "mech-random__seed9": 2.583329645000049,
+    "mech-random__seed10": 2.7034176750000825,
+    "mech-random__seed11": 2.728709448000018,
+    "mech-random__seed12": 2.58104460200002,
+    "mech-random__seed13": 2.6439095750001798,
+    "mech-random__seed14": 2.612709820999953,
+    "mech-random__seed15": 2.7866740730000856,
+    "mech-random__seed16": 2.953277264999997,
+    "mech-random__seed17": 2.649610002000145,
+    "mech-random__seed18": 2.735133100999974,
+    "mech-random__seed19": 2.6513641230001213,
+    "int-pairwise__seed0": 2.4823877480000647,
+    "int-pairwise__seed1": 2.5717103179999867,
+    "int-pairwise__seed2": 2.326534410000022,
+    "int-pairwise__seed3": 2.3231497619999573,
+    "int-pairwise__seed4": 2.37821411799996,
+    "int-pairwise__seed5": 2.3379984979999335,
+    "int-pairwise__seed6": 2.438366685000119,
+    "int-pairwise__seed7": 2.328840492999916,
+    "int-pairwise__seed8": 2.3991354389997923,
+    "int-pairwise__seed9": 2.3876674949999597,
+    "int-pairwise__seed10": 2.482438798000203,
+    "int-pairwise__seed11": 2.3424658980000004,
+    "int-pairwise__seed12": 2.4756197600001997,
+    "int-pairwise__seed13": 2.4088007379998544,
+    "int-pairwise__seed14": 2.359388068000044,
+    "int-pairwise__seed15": 2.4019112580001547,
+    "int-pairwise__seed16": 2.33767306499999,
+    "int-pairwise__seed17": 2.337584350999805,
+    "int-pairwise__seed18": 2.3394555659999696,
+    "int-pairwise__seed19": 2.46466059699992
+  },
+  "errors": {}
+}

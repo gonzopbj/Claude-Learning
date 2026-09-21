@@ -1,0 +1,471 @@
+{
+  "run_name": "knob_small_h1",
+  "agents": [
+    "mech-full",
+    "mech-oracle-detect",
+    "oracle-structure",
+    "int-pairwise"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "episodes": 60,
+  "budget": 50,
+  "n_obs": 200,
+  "n_queries": 200,
+  "shift_type": "small",
+  "hetero": 1,
+  "hidden": false,
+  "shifts_enabled": true,
+  "workers": 4,
+  "smoke": false,
+  "d": 6,
+  "constants_path": "results/constants_B50.json",
+  "constants_sha256": "6782fd19538d7beca7721b9d4ab17c9c5584bd39774d2f5fa3eb4062f233247e",
+  "constants": {
+    "spec_version": "v2",
+    "validation_seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ],
+    "created_utc": "2026-09-21T06:33:42Z",
+    "lambda": 4.758867263793945,
+    "lambda_details": {
+      "lambda": 4.758867263793945,
+      "target_false_reset_rate": 0.01,
+      "pooled_exceedance_rate_at_lambda": 0.009887005649717515,
+      "resimulated_false_reset_rate_at_lambda": 0.007344632768361582,
+      "resimulation_used": true,
+      "resimulation_max_abs_discrepancy_vs_stored_g": 3.337860107421875e-06,
+      "n_tested_mechanism_episodes": 3540,
+      "n_seeds": 10,
+      "rate_curve": [
+        {
+          "quantile": 50,
+          "lambda": 0.0,
+          "pooled_rate": 0.08305084745762711,
+          "resim_rate": 0.06807909604519774
+        },
+        {
+          "quantile": 90,
+          "lambda": 0.0,
+          "pooled_rate": 0.08305084745762711,
+          "resim_rate": 0.06807909604519774
+        },
+        {
+          "quantile": 95,
+          "lambda": 0.9309856444597221,
+          "pooled_rate": 0.05,
+          "resim_rate": 0.039265536723163845
+        },
+        {
+          "quantile": 99,
+          "lambda": 4.73411977291108,
+          "pooled_rate": 0.010169491525423728,
+          "resim_rate": 0.007627118644067797
+        },
+        {
+          "quantile": 99.9,
+          "lambda": 69.58647277069116,
+          "pooled_rate": 0.0011299435028248588,
+          "resim_rate": 0.0002824858757062147
+        }
+      ],
+      "method": "smallest stored g value at which both mean(g > lambda) over the never-reset no-shift run and the offline Page-Hinkley re-simulation from GLR_t give <= target false resets per tested mechanism-episode",
+      "false_reset_rate_at_lambda": 0.020155038759689922,
+      "recall_at_lambda": 1.0,
+      "grid_multipliers": [
+        0.5,
+        1,
+        2,
+        4,
+        8
+      ],
+      "roc": [
+        {
+          "multiplier": 0.5,
+          "lambda": 2.3794336318969727,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.03875968992248062,
+          "misattribution_rate": 0.5866666666666667,
+          "n_shifts": 65,
+          "n_resets": 250
+        },
+        {
+          "multiplier": 1,
+          "lambda": 4.758867263793945,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.020155038759689922,
+          "misattribution_rate": 0.49809523809523804,
+          "n_shifts": 65,
+          "n_resets": 184
+        },
+        {
+          "multiplier": 2,
+          "lambda": 9.51773452758789,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 1.0,
+          "false_reset_rate": 0.011627906976744184,
+          "misattribution_rate": 0.4671428571428571,
+          "n_shifts": 65,
+          "n_resets": 152
+        },
+        {
+          "multiplier": 4,
+          "lambda": 19.03546905517578,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9857142857142858,
+          "false_reset_rate": 0.008527131782945736,
+          "misattribution_rate": 0.4671428571428571,
+          "n_shifts": 65,
+          "n_resets": 143
+        },
+        {
+          "multiplier": 8,
+          "lambda": 38.07093811035156,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.949047619047619,
+          "false_reset_rate": 0.00813953488372093,
+          "misattribution_rate": 0.4076190476190476,
+          "n_shifts": 65,
+          "n_resets": 134
+        }
+      ]
+    },
+    "agents": {
+      "marginal-mean": {
+        "tau": null
+      },
+      "obs-window": {
+        "W": 1,
+        "tau": 0.8335104584693909
+      },
+      "obs-cumulative": {
+        "tau": 0.2532491385936737
+      },
+      "int-pairwise": {
+        "W": 3,
+        "tau": 2.4646804332733154
+      },
+      "mech-full": {
+        "tau": 0.3076980412006378
+      },
+      "mech-random": {
+        "tau": 0.32158881425857544
+      },
+      "mech-full-nofloor": {
+        "tau": 0.337624192237854
+      },
+      "mech-reset-all": {
+        "tau": 0.4162448048591614
+      },
+      "mech-no-detect": {
+        "gamma": 0.5,
+        "tau": 0.5341511964797974
+      },
+      "mech-oracle-detect": {
+        "tau": 0.2662751078605652
+      },
+      "mech-overconfident": {
+        "tau": 0.3286043703556061
+      },
+      "oracle-structure": {
+        "tau": 0.2566886842250824
+      },
+      "oracle": {
+        "tau": null
+      },
+      "mech-full-diag": {
+        "tau": 0.3076980412006378
+      }
+    },
+    "tuning": {
+      "obs-window": {
+        "key": "W",
+        "best": 1,
+        "grid": [
+          {
+            "W": 1,
+            "nmse": 0.14195859730700303
+          },
+          {
+            "W": 2,
+            "nmse": 0.14252809892673107
+          },
+          {
+            "W": 3,
+            "nmse": 0.14803379259460558
+          },
+          {
+            "W": 5,
+            "nmse": 0.16172229317169784
+          }
+        ]
+      },
+      "int-pairwise": {
+        "key": "W",
+        "best": 3,
+        "grid": [
+          {
+            "W": 3,
+            "nmse": 0.07581871021117968
+          },
+          {
+            "W": 5,
+            "nmse": 0.07872766047547236
+          },
+          {
+            "W": 8,
+            "nmse": 0.10016576785920646
+          },
+          {
+            "W": 12,
+            "nmse": 0.13063277657852163
+          }
+        ]
+      },
+      "mech-no-detect": {
+        "key": "gamma",
+        "best": 0.5,
+        "grid": [
+          {
+            "gamma": 0.5,
+            "nmse": 0.04542673622411121
+          },
+          {
+            "gamma": 0.7,
+            "nmse": 0.06145742372458936
+          },
+          {
+            "gamma": 0.9,
+            "nmse": 0.11820078655481417
+          }
+        ]
+      }
+    },
+    "tau_percentile": 90.0,
+    "run_parameters": {
+      "episodes": 60,
+      "budget": 50,
+      "n_obs": 200,
+      "n_queries": 200,
+      "shift_type": "large",
+      "hetero": 0,
+      "hidden": false
+    },
+    "notes": [
+      "mech-full-diag is hidden-only and was not run on validation; its tau is copied from mech-full.",
+      "marginal-mean and oracle never abstain (tau = null).",
+      "lambda chosen from a no-shift mech-full run at lambda = inf; see lambda_details.method.  The offline Page-Hinkley re-simulation ignores that a real fire also truncates the buffer, so false_reset_rate_at_lambda (from the with-shifts run at lambda*) is the empirical check."
+    ],
+    "git_hash": "00c5011bebe725d1a4ad0d3afe4cd0e404a3930d",
+    "total_core_seconds": 1678.4813241958618,
+    "wall_seconds": 427.64200558899995
+  },
+  "git_hash": "132c2f9aeee53e077319d2c7edb96be618940a71",
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "n_jobs": 80,
+  "started_utc": "2026-09-21T06:53:02Z",
+  "finished_utc": "2026-09-21T06:53:50Z",
+  "total_wall_s": 47.717248158000075,
+  "wall_time_s": {
+    "mech-full__seed0": 2.446655511856079,
+    "mech-full__seed1": 2.403059720993042,
+    "mech-full__seed2": 2.4435558319091797,
+    "mech-full__seed3": 2.425959587097168,
+    "mech-full__seed4": 2.3312721252441406,
+    "mech-full__seed5": 2.343907594680786,
+    "mech-full__seed6": 2.4528815746307373,
+    "mech-full__seed7": 2.357401132583618,
+    "mech-full__seed8": 2.3131279945373535,
+    "mech-full__seed9": 2.3368422985076904,
+    "mech-full__seed10": 2.331026077270508,
+    "mech-full__seed11": 2.4929025173187256,
+    "mech-full__seed12": 2.3446171283721924,
+    "mech-full__seed13": 2.3353238105773926,
+    "mech-full__seed14": 2.3737425804138184,
+    "mech-full__seed15": 2.369828224182129,
+    "mech-full__seed16": 2.3710711002349854,
+    "mech-full__seed17": 2.36446475982666,
+    "mech-full__seed18": 2.4909017086029053,
+    "mech-full__seed19": 2.348977565765381,
+    "mech-oracle-detect__seed0": 2.2705137729644775,
+    "mech-oracle-detect__seed1": 2.265289306640625,
+    "mech-oracle-detect__seed2": 2.334630250930786,
+    "mech-oracle-detect__seed3": 2.282020092010498,
+    "mech-oracle-detect__seed4": 2.2937707901000977,
+    "mech-oracle-detect__seed5": 2.3799495697021484,
+    "mech-oracle-detect__seed6": 2.311537981033325,
+    "mech-oracle-detect__seed7": 2.3495049476623535,
+    "mech-oracle-detect__seed8": 2.2795863151550293,
+    "mech-oracle-detect__seed9": 2.363754987716675,
+    "mech-oracle-detect__seed10": 2.3061506748199463,
+    "mech-oracle-detect__seed11": 2.373978853225708,
+    "mech-oracle-detect__seed12": 2.3252248764038086,
+    "mech-oracle-detect__seed13": 2.312290668487549,
+    "mech-oracle-detect__seed14": 2.310559034347534,
+    "mech-oracle-detect__seed15": 2.3134918212890625,
+    "mech-oracle-detect__seed16": 2.2926690578460693,
+    "mech-oracle-detect__seed17": 2.501882314682007,
+    "mech-oracle-detect__seed18": 2.3535120487213135,
+    "mech-oracle-detect__seed19": 2.2941040992736816,
+    "oracle-structure__seed0": 2.2464869022369385,
+    "oracle-structure__seed1": 2.26281476020813,
+    "oracle-structure__seed2": 2.325356960296631,
+    "oracle-structure__seed3": 2.30658221244812,
+    "oracle-structure__seed4": 2.286221742630005,
+    "oracle-structure__seed5": 2.2982959747314453,
+    "oracle-structure__seed6": 2.393695116043091,
+    "oracle-structure__seed7": 2.389827251434326,
+    "oracle-structure__seed8": 2.300464391708374,
+    "oracle-structure__seed9": 2.2394158840179443,
+    "oracle-structure__seed10": 2.305609703063965,
+    "oracle-structure__seed11": 2.327704906463623,
+    "oracle-structure__seed12": 2.323596715927124,
+    "oracle-structure__seed13": 2.2442307472229004,
+    "oracle-structure__seed14": 2.2792673110961914,
+    "oracle-structure__seed15": 2.311918258666992,
+    "oracle-structure__seed16": 2.310889959335327,
+    "oracle-structure__seed17": 2.3122475147247314,
+    "oracle-structure__seed18": 2.34529972076416,
+    "oracle-structure__seed19": 2.3697617053985596,
+    "int-pairwise__seed0": 2.1854379177093506,
+    "int-pairwise__seed1": 2.3538944721221924,
+    "int-pairwise__seed2": 2.2293951511383057,
+    "int-pairwise__seed3": 2.142914056777954,
+    "int-pairwise__seed4": 2.2632503509521484,
+    "int-pairwise__seed5": 2.18540096282959,
+    "int-pairwise__seed6": 2.1859047412872314,
+    "int-pairwise__seed7": 2.182870626449585,
+    "int-pairwise__seed8": 2.285311698913574,
+    "int-pairwise__seed9": 2.2728209495544434,
+    "int-pairwise__seed10": 2.2281370162963867,
+    "int-pairwise__seed11": 2.2133536338806152,
+    "int-pairwise__seed12": 2.2869138717651367,
+    "int-pairwise__seed13": 2.1756784915924072,
+    "int-pairwise__seed14": 2.173692226409912,
+    "int-pairwise__seed15": 2.244396924972534,
+    "int-pairwise__seed16": 2.149479866027832,
+    "int-pairwise__seed17": 2.214460611343384,
+    "int-pairwise__seed18": 2.1882433891296387,
+    "int-pairwise__seed19": 2.1388139724731445
+  },
+  "job_time_s": {
+    "mech-full__seed0": 2.6763466359998347,
+    "mech-full__seed1": 2.6215508220000174,
+    "mech-full__seed2": 2.6933203950000006,
+    "mech-full__seed3": 2.642767941000102,
+    "mech-full__seed4": 2.381904071000008,
+    "mech-full__seed5": 2.394355963999942,
+    "mech-full__seed6": 2.5018782150000334,
+    "mech-full__seed7": 2.410484151999981,
+    "mech-full__seed8": 2.3669818220000707,
+    "mech-full__seed9": 2.3828912890000993,
+    "mech-full__seed10": 2.38597043499999,
+    "mech-full__seed11": 2.546378832000073,
+    "mech-full__seed12": 2.399550823000027,
+    "mech-full__seed13": 2.385838227000022,
+    "mech-full__seed14": 2.4216255289998116,
+    "mech-full__seed15": 2.4168189170000005,
+    "mech-full__seed16": 2.423079639999969,
+    "mech-full__seed17": 2.417201501999898,
+    "mech-full__seed18": 2.5439197890000287,
+    "mech-full__seed19": 2.3995729150001353,
+    "mech-oracle-detect__seed0": 2.321396428000071,
+    "mech-oracle-detect__seed1": 2.3155978089998825,
+    "mech-oracle-detect__seed2": 2.38199479900004,
+    "mech-oracle-detect__seed3": 2.3367600219999076,
+    "mech-oracle-detect__seed4": 2.3453403820001313,
+    "mech-oracle-detect__seed5": 2.4309911860000284,
+    "mech-oracle-detect__seed6": 2.362177827000096,
+    "mech-oracle-detect__seed7": 2.402350295000133,
+    "mech-oracle-detect__seed8": 2.330613355000196,
+    "mech-oracle-detect__seed9": 2.4112206039999364,
+    "mech-oracle-detect__seed10": 2.3618185839998205,
+    "mech-oracle-detect__seed11": 2.4270908080000027,
+    "mech-oracle-detect__seed12": 2.378762907999999,
+    "mech-oracle-detect__seed13": 2.364025763999962,
+    "mech-oracle-detect__seed14": 2.3568306340000618,
+    "mech-oracle-detect__seed15": 2.361464905000048,
+    "mech-oracle-detect__seed16": 2.3458184719997917,
+    "mech-oracle-detect__seed17": 2.5535072239999863,
+    "mech-oracle-detect__seed18": 2.401855684000111,
+    "mech-oracle-detect__seed19": 2.342774678999831,
+    "oracle-structure__seed0": 2.299416934999954,
+    "oracle-structure__seed1": 2.314702374000035,
+    "oracle-structure__seed2": 2.3730287660000613,
+    "oracle-structure__seed3": 2.3630586669999047,
+    "oracle-structure__seed4": 2.3430918100000326,
+    "oracle-structure__seed5": 2.350725981000096,
+    "oracle-structure__seed6": 2.446956026999942,
+    "oracle-structure__seed7": 2.446475656000075,
+    "oracle-structure__seed8": 2.359384418000218,
+    "oracle-structure__seed9": 2.2858484010000666,
+    "oracle-structure__seed10": 2.363137628000004,
+    "oracle-structure__seed11": 2.384317760000158,
+    "oracle-structure__seed12": 2.377338206999866,
+    "oracle-structure__seed13": 2.2971144350001396,
+    "oracle-structure__seed14": 2.328952946000072,
+    "oracle-structure__seed15": 2.3681538740001997,
+    "oracle-structure__seed16": 2.3636789390000104,
+    "oracle-structure__seed17": 2.364564538999957,
+    "oracle-structure__seed18": 2.395549808999931,
+    "oracle-structure__seed19": 2.4199687780001113,
+    "int-pairwise__seed0": 2.2594033769998987,
+    "int-pairwise__seed1": 2.426733511999828,
+    "int-pairwise__seed2": 2.302112958999942,
+    "int-pairwise__seed3": 2.2135647009999957,
+    "int-pairwise__seed4": 2.3356782830001066,
+    "int-pairwise__seed5": 2.261392305000072,
+    "int-pairwise__seed6": 2.258418077999977,
+    "int-pairwise__seed7": 2.2533737740000106,
+    "int-pairwise__seed8": 2.355620854000108,
+    "int-pairwise__seed9": 2.3456705680000596,
+    "int-pairwise__seed10": 2.301667214999952,
+    "int-pairwise__seed11": 2.2862235340001007,
+    "int-pairwise__seed12": 2.3674696390000918,
+    "int-pairwise__seed13": 2.246739524999839,
+    "int-pairwise__seed14": 2.252883677,
+    "int-pairwise__seed15": 2.3139551779997873,
+    "int-pairwise__seed16": 2.2222739329999968,
+    "int-pairwise__seed17": 2.2858723300000747,
+    "int-pairwise__seed18": 2.2584605969998393,
+    "int-pairwise__seed19": 2.210164776000056
+  },
+  "errors": {}
+}

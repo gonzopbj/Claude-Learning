@@ -47,7 +47,27 @@ _Nothing yet._
 
 Left unresolved at the end of a session. Claude raises these first next time.
 
-_None yet._
+- (2026-09-20, from the attention discussion) Take X ← Z → Y with Z observed and no edge
+  X → Y. Train a transformer to predict Y from (X, Z). What will the attention weight from Y's
+  position onto X be, and what would it need to be for "attention weights are causal edges"
+  to survive? Predict before reasoning it through.
+- (2026-09-21, from the AGI discussion) Of the six requirements for a continually learning
+  system, which can a purely observational learner satisfy even in principle, and which need
+  the ability to act? Sort them and defend the sort.
+- (2026-09-21) Before opening `experiments/mechanism-shift/results/report/REPORT.md`, predict
+  which of its nine pre-registered predictions held. Five did. The four that failed are in
+  `notes/failures.md`.
+
+---
+
+## Explorations outside the plan
+
+Things built or read ahead of the curriculum, at the student's request. Not progress on the
+milestones; listed so they are not mistaken for it.
+
+| Date | What | Where | Student's role |
+|---|---|---|---|
+| 2026-09-21 | Mechanism-shift testbed: six continual-learning requirements tested on a synthetic SCM under sparse mechanism shifts, 14 agents, nine pre-registered predictions | `experiments/mechanism-shift/` | Asked for it; did not write it. To be reread in months 2, 5 and 10 when the pieces are rebuilt from scratch. |
 
 ---
 

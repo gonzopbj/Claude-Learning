@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Raw experiment arrays are large and reproducible from the seeds; keep only
+# config.json, metrics.json, figures/ and REPORT.md under results/.
+experiments/*/results/*/raw/
+experiments/*/results/smoke*/
+experiments/*/results/timing*/
+experiments/*/run_all.log
+experiments/*/results/*.log
