@@ -189,9 +189,13 @@ class IntPairwiseAgent(Agent):
     same policy as `mech-random`.
 
     Observational batches are received for ONE purpose only: the marginal-mean fallback when a
-    pair's fit is guarded out.  Decision (SPEC does not say): the observational pool for that
-    fallback is windowed with the same W, so the fallback adapts to shifts on the same time
-    scale as the agent's own estimator."""
+    pair's fit is guarded out.  The fallback pool is cumulative, exactly the `marginal-mean`
+    rule the SPEC names (conformance audit finding; an earlier draft windowed it).
+
+    Bootstrap guards (leakage audit finding): the n >= 4 / two-distinct-v guards decide on the
+    FULL pool only.  A resample whose sub-design for target i happens to fail them reuses the
+    full-pool coefficients for that (resample, i) instead of falling back to the marginal
+    mean, so low-budget intervals are not inflated by resampling noise in the guard."""
 
     intervenes = True
     uses_floor = True
@@ -215,10 +219,9 @@ class IntPairwiseAgent(Agent):
         # during step 6 and nothing in step 6 reads the fit (the free policy is random and
         # score_before_reveal is None for baselines), so answer-time is the first moment the
         # "posterior" is needed and it is then a deterministic function of the pools.
-        self._obs.append(self._pending)
+        self._obs.append(self._pending)                # cumulative: never trimmed
         self._pending = None
         lo = self._t - self.W                          # keep episodes t with t > lo
-        self._obs = [(t, X) for t, X in self._obs if t > lo]
         self._rows = [r for r in self._rows if r[0] > lo]
 
     def choose_free_interventions(self, n_free, t):
@@ -292,8 +295,14 @@ class IntPairwiseAgent(Agent):
         if n > 0:
             w = bootstrap_weights(self.rng, n)
             beta0, beta1, ok = self._clamped_ols(tgt, val, X, w)
+            # Guards decide on the full pool (weight row 0).  A resample that fails them for
+            # target i while the full pool passes reuses the full-pool coefficients.
+            ok_full = ok[0]                                                    # (d,)
+            reuse = ok_full[None, :] & ~ok                                     # (R, d)
+            beta0 = np.where(reuse[:, :, None], beta0[0][None], beta0)
+            beta1 = np.where(reuse[:, :, None], beta1[0][None], beta1)
             pred_ols = beta0[:, qi, :] + beta1[:, qi, :] * qv[None, :, None]  # (R, Q, d)
-            use_ols = ok[:, qi][:, :, None]                                   # (R, Q, 1)
+            use_ols = np.broadcast_to(ok_full[qi][None, :, None], (w.shape[0], Q, 1))
         else:
             pred_ols = np.zeros((mean_obs.shape[0], Q, self.d))
             use_ols = np.zeros((mean_obs.shape[0], Q, 1), dtype=bool)

@@ -252,7 +252,11 @@ def ols_parent_test(S, j, candidates, n, alpha):
     """SPEC "Structure learning" step 3 on one mechanism's moment matrix S (d+1, d+1) with
     weight total n: OLS of X_j on [1, candidates], keep candidates with two-sided p < alpha.
     Returns the new parent list, or None when a guard says to keep the previous parent set
-    (n < p + 5, or a rank-deficient design after dropping constant columns)."""
+    (n < p + 5, or a rank-deficient design after dropping constant columns).  `n` is the
+    weight total n_eff: for every agent but mech-no-detect that is the row count; for
+    mech-no-detect the moments are gamma-weighted and this is the matching weighted OLS
+    (decision: the SPEC defines the parent test "over mechanism j's own buffer", and that
+    agent's buffer is its weighted sufficient statistics)."""
     if n <= 0:
         return None
     mean = S[0, 1:] / n
@@ -508,6 +512,16 @@ class MechAgent(Agent):
         if self.reset_rule == "none":
             return []
 
+        # Decision (SPEC "Shift detection" vs SPEC test 6 "no re-fire in the episode after a
+        # reset"): the SPEC defines no dead time after a reset, only the N_min = 100 guard,
+        # and a buffer truncated at step 4 already holds ~240 rows by the next step 4.  So a
+        # mechanism IS tested in the episode after its reset, exactly as specified.  Whether
+        # it re-fires is then a statistical matter: with a ~240-row posterior the term
+        # l_true - l_old in GLR is ~ (p+1)/2 * N_obs / n_buffer on top of the batch fit's
+        # optimism, which the fixed drift p + 2 does not absorb, so P(fire) at lambda* is
+        # ~10 % in that episode (and in episodes 2-4 of every run) against ~1 % once the
+        # buffer holds ~1400 rows.  We do not add an unspecified dead time to hide this; it
+        # is a property of the SPEC's detector and shows up in Metric 8 as post-shift resets.
         fired = []
         for j in range(d):
             if self.n_rows[j] < N_MIN:           # guard: skip and hold g at 0
@@ -551,11 +565,23 @@ class MechAgent(Agent):
 
     # ------------------------------------------------------------------ step 6
     def choose_free_interventions(self, n_free, t):
-        if self.selection == "random":
+        if self.selection == "random" or not self.mask[:, 1:].any():
+            # Random targets for the random policy, and ALSO for the active policy while the
+            # learned graph is still empty (SPEC: "the all-zero case when the learned graph
+            # is empty" is broken by the agent's stream).  With no edges the literal score
+            # would rank variables by how well their intercepts are known, which is arbitrary
+            # rather than informative (conformance audit finding).
             targets = self.rng.integers(0, self.d, size=n_free)
         else:
             score = self._scores()
             best = score.max()
+            # Decision: score(i) is the SPEC formula taken literally, the variance over
+            # posterior draws of the full answer mu_{s,k}(i, v = 2), which includes the
+            # intercept uncertainty of every k != i.  The SPEC's remark that an empty learned
+            # graph gives "the all-zero case" is therefore not what the formula evaluates to:
+            # with no edges score(i) = sum_{k != i} Var(b_k) / v_hat_k, distinct across i, so
+            # the stream tie-break below only ever acts on exact ties.  Taking the variance of
+            # the effect alone (2 theta) instead would change the rule beyond the SPEC.
             ties = np.flatnonzero(score >= best - 1e-12 * max(1.0, abs(best)))
             i_star = int(ties[self.rng.integers(len(ties))]) if len(ties) > 1 else int(ties[0])
             targets = [i_star] * n_free          # whole free budget on argmax_i score(i)

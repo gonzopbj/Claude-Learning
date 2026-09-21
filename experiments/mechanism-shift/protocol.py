@@ -267,9 +267,16 @@ def run_agent(world, agent) -> dict:
             struct_refit_events.append((t, j))
 
         # ---- step 8: answer the queries; the evaluator scores them against exact truth
-        ans = agent.answer(query_i, query_v)
+        # Truth is computed from the protocol's own copies BEFORE the agent sees the queries,
+        # and the agent receives read-only copies: an agent cannot change what it is graded on
+        # (leakage audit finding).
         truth = np.stack([np.asarray(world.truth(int(i), float(v)), dtype=np.float64)
                           for i, v in zip(query_i, query_v)])
+        qi_agent = query_i.copy()
+        qv_agent = query_v.copy()
+        qi_agent.setflags(write=False)
+        qv_agent.setflags(write=False)
+        ans = agent.answer(qi_agent, qv_agent)
         ev = evaluate_answer(ans, query_i, truth, sd_ref, agent.tau)
         for key, val in ev.items():
             R[key][r] = val
