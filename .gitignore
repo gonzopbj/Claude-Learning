@@ -9,3 +9,5 @@ __pycache__/
 experiments/*/results/*/raw/
 experiments/*/results/smoke*/
 experiments/*/results/timing*/
+experiments/*/run_all.log
+experiments/*/results/*.log
