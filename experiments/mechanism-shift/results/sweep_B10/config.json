@@ -1,0 +1,434 @@
+{
+  "run_name": "sweep_B10",
+  "agents": [
+    "mech-full",
+    "mech-random",
+    "int-pairwise",
+    "mech-full-nofloor"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "episodes": 60,
+  "budget": 10,
+  "n_obs": 200,
+  "n_queries": 200,
+  "shift_type": "large",
+  "hetero": 0,
+  "hidden": false,
+  "shifts_enabled": true,
+  "workers": 4,
+  "smoke": false,
+  "d": 6,
+  "constants_path": "results/constants_B10.json",
+  "constants_sha256": "5e87655a4eb0124e1291989cd36bad5617ede01323d5b5ce730a3f73c301f1b5",
+  "constants": {
+    "spec_version": "v2",
+    "validation_seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ],
+    "created_utc": "2026-09-21T06:36:48Z",
+    "lambda": 4.758867263793945,
+    "lambda_details": {
+      "lambda": 4.758867263793945,
+      "method": "fixed: reused from the B = 50 calibration (SPEC: one lambda for every detector agent)",
+      "pooled_exceedance_rate_at_lambda": null,
+      "resimulated_false_reset_rate_at_lambda": null,
+      "false_reset_rate_at_lambda": 0.013565891472868217,
+      "recall_at_lambda": 0.9857142857142858,
+      "grid_multipliers": [
+        0.5,
+        1,
+        2,
+        4,
+        8
+      ],
+      "roc": [
+        {
+          "multiplier": 0.5,
+          "lambda": 2.3794336318969727,
+          "recall_window": 1.0,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9857142857142858,
+          "false_reset_rate": 0.03255813953488372,
+          "misattribution_rate": 0.7457142857142858,
+          "n_shifts": 65,
+          "n_resets": 274
+        },
+        {
+          "multiplier": 1,
+          "lambda": 4.758867263793945,
+          "recall_window": 0.9857142857142858,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9857142857142858,
+          "false_reset_rate": 0.013565891472868217,
+          "misattribution_rate": 0.677142857142857,
+          "n_shifts": 65,
+          "n_resets": 204
+        },
+        {
+          "multiplier": 2,
+          "lambda": 9.51773452758789,
+          "recall_window": 0.9857142857142858,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9857142857142858,
+          "false_reset_rate": 0.00813953488372093,
+          "misattribution_rate": 0.6604761904761904,
+          "n_shifts": 65,
+          "n_resets": 181
+        },
+        {
+          "multiplier": 4,
+          "lambda": 19.03546905517578,
+          "recall_window": 0.9857142857142858,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9714285714285715,
+          "false_reset_rate": 0.006201550387596899,
+          "misattribution_rate": 0.6604761904761904,
+          "n_shifts": 65,
+          "n_resets": 167
+        },
+        {
+          "multiplier": 8,
+          "lambda": 38.07093811035156,
+          "recall_window": 0.9571428571428573,
+          "recall_any": 1.0,
+          "accuracy_delay0": 0.9204761904761906,
+          "false_reset_rate": 0.007364341085271317,
+          "misattribution_rate": 0.6261904761904761,
+          "n_shifts": 65,
+          "n_resets": 159
+        }
+      ]
+    },
+    "agents": {
+      "marginal-mean": {
+        "tau": null
+      },
+      "obs-window": {
+        "W": 1,
+        "tau": 0.8335104584693909
+      },
+      "obs-cumulative": {
+        "tau": 0.2532491385936737
+      },
+      "int-pairwise": {
+        "W": 8,
+        "tau": 3.7765164375305176
+      },
+      "mech-full": {
+        "tau": 0.3640020191669464
+      },
+      "mech-random": {
+        "tau": 0.36080825328826904
+      },
+      "mech-full-nofloor": {
+        "tau": 0.36711496114730835
+      },
+      "mech-reset-all": {
+        "tau": 0.44850093126296997
+      },
+      "mech-no-detect": {
+        "gamma": 0.5,
+        "tau": 0.5856660604476929
+      },
+      "mech-oracle-detect": {
+        "tau": 0.2891771197319031
+      },
+      "mech-overconfident": {
+        "tau": 0.37730854749679565
+      },
+      "oracle-structure": {
+        "tau": 0.2858896851539612
+      },
+      "oracle": {
+        "tau": null
+      },
+      "mech-full-diag": {
+        "tau": 0.3640020191669464
+      }
+    },
+    "tuning": {
+      "obs-window": {
+        "key": "W",
+        "best": 1,
+        "grid": [
+          {
+            "W": 1,
+            "nmse": 0.14195859730700303
+          },
+          {
+            "W": 2,
+            "nmse": 0.14252809892673107
+          },
+          {
+            "W": 3,
+            "nmse": 0.14803379259460558
+          },
+          {
+            "W": 5,
+            "nmse": 0.16172229317169784
+          }
+        ]
+      },
+      "int-pairwise": {
+        "key": "W",
+        "best": 8,
+        "grid": [
+          {
+            "W": 3,
+            "nmse": 0.299837102013197
+          },
+          {
+            "W": 5,
+            "nmse": 0.22820644313666677
+          },
+          {
+            "W": 8,
+            "nmse": 0.19345345799608385
+          },
+          {
+            "W": 12,
+            "nmse": 0.20109913525529363
+          }
+        ]
+      },
+      "mech-no-detect": {
+        "key": "gamma",
+        "best": 0.5,
+        "grid": [
+          {
+            "gamma": 0.5,
+            "nmse": 0.10509728128381932
+          },
+          {
+            "gamma": 0.7,
+            "nmse": 0.11957792125648252
+          },
+          {
+            "gamma": 0.9,
+            "nmse": 0.16270277807878183
+          }
+        ]
+      }
+    },
+    "tau_percentile": 90.0,
+    "run_parameters": {
+      "episodes": 60,
+      "budget": 10,
+      "n_obs": 200,
+      "n_queries": 200,
+      "shift_type": "large",
+      "hetero": 0,
+      "hidden": false
+    },
+    "notes": [
+      "mech-full-diag is hidden-only and was not run on validation; its tau is copied from mech-full.",
+      "marginal-mean and oracle never abstain (tau = null).",
+      "lambda chosen from a no-shift mech-full run at lambda = inf; see lambda_details.method.  The offline Page-Hinkley re-simulation ignores that a real fire also truncates the buffer, so false_reset_rate_at_lambda (from the with-shifts run at lambda*) is the empirical check."
+    ],
+    "git_hash": "4752f4b949b0d73c914916e3b97404bbd23e3c5e",
+    "total_core_seconds": 734.3811737298965,
+    "wall_seconds": 186.02203990100008
+  },
+  "git_hash": "7da92540579523fb100e99b6b848ac74c105341a",
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "n_jobs": 80,
+  "started_utc": "2026-09-21T06:46:43Z",
+  "finished_utc": "2026-09-21T06:47:22Z",
+  "total_wall_s": 39.063679845000024,
+  "wall_time_s": {
+    "mech-full__seed0": 1.8912676572799683,
+    "mech-full__seed1": 2.099642038345337,
+    "mech-full__seed2": 2.0538887977600098,
+    "mech-full__seed3": 2.103832244873047,
+    "mech-full__seed4": 1.9987914562225342,
+    "mech-full__seed5": 2.0340282917022705,
+    "mech-full__seed6": 2.077188014984131,
+    "mech-full__seed7": 1.9177647829055786,
+    "mech-full__seed8": 1.9789674282073975,
+    "mech-full__seed9": 1.9760634899139404,
+    "mech-full__seed10": 1.8642666339874268,
+    "mech-full__seed11": 1.859188437461853,
+    "mech-full__seed12": 2.0640289783477783,
+    "mech-full__seed13": 1.872481346130371,
+    "mech-full__seed14": 1.9879578351974487,
+    "mech-full__seed15": 1.9401246309280396,
+    "mech-full__seed16": 1.9136494398117065,
+    "mech-full__seed17": 2.132101535797119,
+    "mech-full__seed18": 2.0829219818115234,
+    "mech-full__seed19": 1.968774676322937,
+    "mech-random__seed0": 1.6659390926361084,
+    "mech-random__seed1": 1.6336617469787598,
+    "mech-random__seed2": 1.7416561841964722,
+    "mech-random__seed3": 1.7059135437011719,
+    "mech-random__seed4": 1.6007826328277588,
+    "mech-random__seed5": 1.6071977615356445,
+    "mech-random__seed6": 1.7361069917678833,
+    "mech-random__seed7": 1.6836448907852173,
+    "mech-random__seed8": 1.772060513496399,
+    "mech-random__seed9": 1.6651078462600708,
+    "mech-random__seed10": 1.7106773853302002,
+    "mech-random__seed11": 1.7583013772964478,
+    "mech-random__seed12": 1.6928715705871582,
+    "mech-random__seed13": 1.656632661819458,
+    "mech-random__seed14": 1.6674890518188477,
+    "mech-random__seed15": 1.6798359155654907,
+    "mech-random__seed16": 1.7124091386795044,
+    "mech-random__seed17": 1.6576238870620728,
+    "mech-random__seed18": 1.6850978136062622,
+    "mech-random__seed19": 1.7064645290374756,
+    "int-pairwise__seed0": 2.065377950668335,
+    "int-pairwise__seed1": 2.1503543853759766,
+    "int-pairwise__seed2": 2.0455336570739746,
+    "int-pairwise__seed3": 2.0523011684417725,
+    "int-pairwise__seed4": 2.0085949897766113,
+    "int-pairwise__seed5": 2.08298397064209,
+    "int-pairwise__seed6": 2.061328887939453,
+    "int-pairwise__seed7": 1.9991189241409302,
+    "int-pairwise__seed8": 2.119715690612793,
+    "int-pairwise__seed9": 2.2692348957061768,
+    "int-pairwise__seed10": 2.0784103870391846,
+    "int-pairwise__seed11": 2.0131070613861084,
+    "int-pairwise__seed12": 2.1181375980377197,
+    "int-pairwise__seed13": 2.1410515308380127,
+    "int-pairwise__seed14": 2.0437238216400146,
+    "int-pairwise__seed15": 2.3021583557128906,
+    "int-pairwise__seed16": 2.1511762142181396,
+    "int-pairwise__seed17": 2.1250109672546387,
+    "int-pairwise__seed18": 2.0530142784118652,
+    "int-pairwise__seed19": 2.070098638534546,
+    "mech-full-nofloor__seed0": 1.8608157634735107,
+    "mech-full-nofloor__seed1": 1.7805259227752686,
+    "mech-full-nofloor__seed2": 1.7791175842285156,
+    "mech-full-nofloor__seed3": 1.672250509262085,
+    "mech-full-nofloor__seed4": 1.817305326461792,
+    "mech-full-nofloor__seed5": 1.8199479579925537,
+    "mech-full-nofloor__seed6": 1.8250799179077148,
+    "mech-full-nofloor__seed7": 1.7111618518829346,
+    "mech-full-nofloor__seed8": 1.7569469213485718,
+    "mech-full-nofloor__seed9": 1.7733672857284546,
+    "mech-full-nofloor__seed10": 1.7115428447723389,
+    "mech-full-nofloor__seed11": 1.7432588338851929,
+    "mech-full-nofloor__seed12": 1.6848913431167603,
+    "mech-full-nofloor__seed13": 1.7410897016525269,
+    "mech-full-nofloor__seed14": 1.693465232849121,
+    "mech-full-nofloor__seed15": 1.747166633605957,
+    "mech-full-nofloor__seed16": 1.7551891803741455,
+    "mech-full-nofloor__seed17": 1.7586016654968262,
+    "mech-full-nofloor__seed18": 1.686305046081543,
+    "mech-full-nofloor__seed19": 1.7310177087783813
+  },
+  "job_time_s": {
+    "mech-full__seed0": 2.1056144849999328,
+    "mech-full__seed1": 2.4054918500000895,
+    "mech-full__seed2": 2.265731638000034,
+    "mech-full__seed3": 2.4491667899999356,
+    "mech-full__seed4": 2.0475611399999707,
+    "mech-full__seed5": 2.0846294780001244,
+    "mech-full__seed6": 2.1268638619999365,
+    "mech-full__seed7": 1.9670449239999925,
+    "mech-full__seed8": 2.0329966090000653,
+    "mech-full__seed9": 2.0232240210000327,
+    "mech-full__seed10": 1.9131671900001948,
+    "mech-full__seed11": 1.9109822550001354,
+    "mech-full__seed12": 2.118977866000023,
+    "mech-full__seed13": 1.9297662989999935,
+    "mech-full__seed14": 2.032832949999829,
+    "mech-full__seed15": 1.98771818299997,
+    "mech-full__seed16": 1.964385823999919,
+    "mech-full__seed17": 2.1796595999999226,
+    "mech-full__seed18": 2.1294946450000225,
+    "mech-full__seed19": 2.014966894000054,
+    "mech-random__seed0": 1.7194172040001376,
+    "mech-random__seed1": 1.6807499300000472,
+    "mech-random__seed2": 1.7859711419998803,
+    "mech-random__seed3": 1.7604015719998642,
+    "mech-random__seed4": 1.6525722119999955,
+    "mech-random__seed5": 1.6572081859999344,
+    "mech-random__seed6": 1.7835096459998567,
+    "mech-random__seed7": 1.7346766750001734,
+    "mech-random__seed8": 1.8270789389998754,
+    "mech-random__seed9": 1.7127847570000085,
+    "mech-random__seed10": 1.7597876029999497,
+    "mech-random__seed11": 1.8105892559999575,
+    "mech-random__seed12": 1.7451126049998038,
+    "mech-random__seed13": 1.7079859559999022,
+    "mech-random__seed14": 1.7130112019999615,
+    "mech-random__seed15": 1.7267826559998412,
+    "mech-random__seed16": 1.7621043790002204,
+    "mech-random__seed17": 1.7076405349998822,
+    "mech-random__seed18": 1.731611402999988,
+    "mech-random__seed19": 1.7520769519999249,
+    "int-pairwise__seed0": 2.135043343999996,
+    "int-pairwise__seed1": 2.223089709000078,
+    "int-pairwise__seed2": 2.115543240999841,
+    "int-pairwise__seed3": 2.1228214140001,
+    "int-pairwise__seed4": 2.079244135000181,
+    "int-pairwise__seed5": 2.15818871700003,
+    "int-pairwise__seed6": 2.1314910189998955,
+    "int-pairwise__seed7": 2.0687604400000055,
+    "int-pairwise__seed8": 2.192708932999949,
+    "int-pairwise__seed9": 2.340269199999966,
+    "int-pairwise__seed10": 2.149188226999968,
+    "int-pairwise__seed11": 2.08612894099997,
+    "int-pairwise__seed12": 2.192440832999864,
+    "int-pairwise__seed13": 2.212107819000039,
+    "int-pairwise__seed14": 2.1162363959999766,
+    "int-pairwise__seed15": 2.373567501000025,
+    "int-pairwise__seed16": 2.2245898529999977,
+    "int-pairwise__seed17": 2.195012454000107,
+    "int-pairwise__seed18": 2.123309221999989,
+    "int-pairwise__seed19": 2.1428935569999794,
+    "mech-full-nofloor__seed0": 1.9104261830000269,
+    "mech-full-nofloor__seed1": 1.8275946960000056,
+    "mech-full-nofloor__seed2": 1.823747547000039,
+    "mech-full-nofloor__seed3": 1.7216915049998534,
+    "mech-full-nofloor__seed4": 1.8659854269999414,
+    "mech-full-nofloor__seed5": 1.8691900429998896,
+    "mech-full-nofloor__seed6": 1.8714359630000672,
+    "mech-full-nofloor__seed7": 1.7600982789999762,
+    "mech-full-nofloor__seed8": 1.8086585399998967,
+    "mech-full-nofloor__seed9": 1.8195442870000988,
+    "mech-full-nofloor__seed10": 1.7586411090001093,
+    "mech-full-nofloor__seed11": 1.792766760999939,
+    "mech-full-nofloor__seed12": 1.7362533529999382,
+    "mech-full-nofloor__seed13": 1.7892108840001129,
+    "mech-full-nofloor__seed14": 1.7371407499999805,
+    "mech-full-nofloor__seed15": 1.7928245609998612,
+    "mech-full-nofloor__seed16": 1.8017287939999278,
+    "mech-full-nofloor__seed17": 1.8047247179999886,
+    "mech-full-nofloor__seed18": 1.732316929000035,
+    "mech-full-nofloor__seed19": 1.7762485660000493
+  },
+  "errors": {}
+}
