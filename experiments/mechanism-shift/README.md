@@ -26,6 +26,32 @@ way to use it is to read `SPEC.md`, predict each result before opening `REPORT.m
 then, in months two, five and ten, rebuild the pieces (SCM simulator, structure learning from
 interventions, invariance under shift) from scratch as the plan prescribes.
 
+## Headline results (main run: 20 seeds, 60 episodes, budget 50)
+
+Normalized interventional error, lower is better; the marginal-mean floor is 0.29.
+
+| agent | error | false effects on non-descendants | 90 % coverage, stable |
+|---|---|---|---|
+| observational regression, windowed | 0.137 | 0.173 | 0.52 |
+| structure-free interventional regression | 0.082 | 0.076 | 0.87 |
+| **proposed system (`mech-full`)** | **0.030** | **0.001** | 0.82 |
+| same, without the exploration floor | 0.087 | 0.001 | 0.73 |
+| same, with the true graph given | 0.001 | 0.000 | 0.92 |
+
+Of nine pre-registered predictions, five held and four did not. Held: observational
+regression sits at its population bias floor (see is not do); detection costs less than
+relearning after a shift; factorization buys sample efficiency at low intervention budgets;
+the hidden confounder makes the system confidently wrong (coverage 0.11 on the confounded
+pair, no rise in abstention); credit assignment is exact under the world it was tuned for.
+Not held: the calibration band was too narrow for the sample size, overwriting all memory
+cost nothing because relearning is cheap here, the overconfidence probe was erased by the
+data in one episode, and the noise-only regret was on the threshold rather than above it.
+
+Two unplanned findings matter more than the verdicts. Active intervention selection was worth
+nothing over random targets at any budget, while the exploration floor was worth a factor of
+three. And with the true graph given, error drops thirty-fold: essentially all remaining
+error is structure learning, not estimation.
+
 ## Files
 
 | File | What |
