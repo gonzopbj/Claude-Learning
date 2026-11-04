@@ -12,7 +12,7 @@ results and is labelled exploratory.
 ## Bottom line
 
 **Don't pursue Idea 2 as stated.** That is, "a learnable sparse adjacency in the JEPA predictor
-improves planning and robustness". There are two reasons:
+improves planning and robustness". There are three reasons:
 
 1. **When the factors are given (state regime), the gate is redundant.**
    - With fully observed Markov state, the best one-step predictor depends only on the true
@@ -33,6 +33,15 @@ improves planning and robustness". There are two reasons:
    - Neither the oracle mask nor an inverse-dynamics loss made the latent chunks align with
      objects (min matched R² ≈ 0.2 against a pre-set bar of 0.8). The learned hard gate collapsed
      to an empty graph and cut the action edge.
+3. **The prior only pays where data can't find the structure, and then it acts on strength,
+   not causality** (§4, exploratory, 3 seeds each).
+   - With 30 training episodes, dense starts using non-parents. Oracle and hard predict 6–20 %
+     better, and planning gains 8–9 points in some comparisons. That direction held in every
+     seed, but it is not significant at n = 3.
+   - When a non-causal variable predicts a child, the hard gate pruned it only because it was
+     weaker than the true edges. In one seed it pruned a weak true edge as well.
+   - So "sparse" here means "drop weak dependencies". That is a sample-efficiency prior, not a
+     causal one.
 
 The literature check (`docs/literature_review.md`) had already put the predictor at about 70–80 %
 done by **SPARTAN** (NeurIPS 2025), with S2-SSM and Causal-JEPA nearby. A planning-benchmark
@@ -43,6 +52,7 @@ version would read as incremental.
 - The identifiability question underneath the idea: whether mechanism sparsity plus SIGReg makes
   learned factors align with objects.
 - Settings where data cannot determine the parents: few-shot, partially observed, confounded.
+  The sharpest version is **sparsity vs invariance as the predictor's prior** (§6.1).
 
 This pilot gives no positive evidence for the identifiability question. It does show the
 precondition you would need to solve first: an encoder that keeps the controllable, fast
@@ -93,6 +103,7 @@ The code is in this directory, about 1,500 lines of Python, CPU only.
   - Random actions reach 0.09.
 
 **Scale.**
+- Exploratory arms (§4): 9 low-data runs and 9 coupled-world runs, state regime.
 - State regime: 7 variants, 3–5 seeds, paired.
 - Pixel regime: dense, hard and oracle × 2 seeds, plus 2 inverse-dynamics runs.
 - λ_A was selected on validation *prediction* loss with a held-out seed, never on graph recovery.
@@ -120,7 +131,9 @@ from dense, with a t-based 95 % CI.
 | P12 | Pixel: the hard gate's graph recovery is undefined or at chance | Undefined (alignment < 0.8), and the gate collapsed to 0 edges | **Holds** (trivially) |
 
 The predictions about *mechanics* held: P1, P7, P9 and P10. The ones encoding the *hope* failed:
-P5, P6, P8-shift and P11.
+P5, P6, P8-shift and P11. The two exploratory arms (§4) partly qualify this:
+- With little data, the structured predictor is better (P13, directional).
+- The learned gate prunes by edge strength, not causal status (P14).
 
 ## 3. What happened, and why
 
@@ -230,7 +243,77 @@ Because the MLP probe is also low, the information is *absent*, not just nonline
 
 ## 4. Low-data arm (exploratory, P13)
 
-LOWDATA_PLACEHOLDER
+Two arms, both added after the main results, with predictions written into `SPEC.md` addenda
+before running. Three seeds each. Tables: `results/summary.md` (regime `state_n30`) and
+`results/coupled.md`.
+
+### 4.1 Low data (30 training episodes instead of 1000): **the one place the prior helps**
+
+| | dense | hard | oracle |
+|---|---|---|---|
+| ID error h=1 (× copy) | 0.675 ± 0.091 | 0.543 ± 0.024 | 0.550 ± 0.050 |
+| ID error h=5 (× copy) | 0.401 ± 0.026 | 0.376 ± 0.029 | 0.345 ± 0.021 |
+| Non-edge Jacobian (main grid: 0.010) | **0.127** | 0.000 | 0.000 |
+| Gate: SHD / edges / action edge OK | – | 0.67 / 2.3 / 3 of 3 | – |
+| Planning success ID / distractor | 0.28 / 0.26 | 0.31 / **0.34** | **0.38** / 0.30 |
+
+- With 30 episodes, the likelihood no longer pins down the parents. Dense now leans on
+  non-parents (normalised Jacobian 0.13, 13× the full-data value), including the grandparent
+  shortcut 0 → 2 (0.12).
+- The hard gate still finds the graph: SHD ≤ 1 and the action edge kept in all seeds.
+- Both structured models predict better:
+  - **P13** (oracle > 10 % better at h = 5): oracle is 14 % better on average, and better in all
+    3 seeds (relative 0.79–0.90). The paired CI on the difference, [−0.124, +0.011], still
+    touches 0 at n = 3.
+  - Hard is 6 % better at h = 5 (CI [−0.034, −0.016] in absolute terms) and 20 % better at
+    h = 1 (CI crosses 0).
+- Planning:
+  - Oracle gains +9 points in-distribution (CI [+6, +13]).
+  - Hard gains +8 points under the distractor shift (CI [+5, +12]). This is the only
+    planning gain in the whole pilot.
+  - The other two comparisons are not significant.
+- **Verdict on P13: holds directionally** (14 % in every seed). It is not significant at n = 3.
+  It is consistent with the theory in §3.1: a structural prior pays where data is too scarce to
+  find the structure. This is also SPARTAN's headline claim (few-shot adaptation), so the result
+  is a replication, not a discovery.
+
+### 4.2 Spurious predictor (coupled world): **sparsity prunes weak edges, not non-causal ones**
+
+A hidden noise drives the distractor's velocity and, one step later, object 2. So the distractor
+*predicts* object 2 without causing it (linear Δ-R² 0.02, against 0.04 for the true edge 3 → 2).
+
+| Seed | dense ∂ẑ₂/∂z₄ | hard gate σ for 1→2 / 3→2 / 4→2 | hard ∂ẑ₂/∂z₃ |
+|---|---|---|---|
+| 0 | 0.134 | 0.76 / 0.52 / 0.20 | 0.164 |
+| 1 | 0.015 | 0.59 / **0.39** / 0.17 | **0.000** |
+| 2 | 0.120 | 0.69 / 0.50 / 0.21 | 0.164 |
+
+- **Dense picked up the spurious dependence in 2 of 3 seeds,** as predicted.
+- **The hard gate pruned 4 → 2 in all 3 seeds.** P14 had predicted it would keep the edge, so
+  on its face this is the positive outcome.
+- The same table shows *why* it pruned it.
+  - The gate ranks edges by **strength**: 1→2 > 3→2 > 4→2, exactly the order of their Δ-R²
+    (0.064 > 0.042 > 0.020).
+  - The weak *true* edge 3 → 2 sat on the threshold in two seeds (0.52, 0.50) and was **cut** in
+    the third, where the model then ignored object 3 completely.
+  - The gate has no way to tell causal from predictive. It removed the spurious edge only
+    because that edge was the weakest. Make the spurious correlate stronger than a true parent
+    and, on this evidence, the order flips.
+- **Robustness: unmeasurable at this coupling strength.** On object 2 under decoupling:
+
+  | Model | Error change |
+  |---|---|
+  | dense | +3 % |
+  | hard | +1 % |
+  | oracle (sees no distractor) | +6 % |
+
+  The oracle can't be affected by the coupling, so ±6 % is the noise floor. The pre-set bar was
+  10 %.
+- **Verdict on P14:** the gate prediction fails in its letter: 4 → 2 was pruned, not kept. It
+  holds in its mechanism: pruning followed strength and also cut a true edge in 1 of 3 seeds.
+  The robustness half is null.
+- **What would settle it:** sweep the coupling strength past the weakest true edge. This is the
+  experiment to run first if you continue (§6).
 
 ## 5. Caveats: what this pilot can't tell you
 
@@ -267,12 +350,15 @@ LOWDATA_PLACEHOLDER
 In order of how much I'd bet on them:
 
 1. **Data-limited or confounded state worlds: where a structural prior *can* matter.** This is
-   cheap, needs no pixels, and fits the M10 invariance convergence in the curriculum. Create the
-   conditions where likelihood alone can't find the parents:
-   - few episodes (§4);
-   - a non-parent correlated with a parent in training and decorrelated at test (an ICP-style
-     environment shift);
-   - observation noise on a parent, so a correlated non-parent carries real information.
+   cheap, needs no pixels, and fits the M10 invariance convergence in the curriculum.
+   - §4.1 already shows the low-data effect directionally. It needs 10+ seeds and a sweep over
+     n_train to be a result.
+   - §4.2 shows the gate is blind to causal status.
+   - The sharp experiment: sweep the spurious coupling until the correlate is stronger than the
+     weakest true parent. Then compare the L1-gated predictor with an *invariance*-trained one
+     (multiple training environments with different couplings, IRM/ICP-style penalty).
+   - Prediction: L1 keeps the strong spurious edge and drops the weak true one, while invariance
+     does the reverse.
 
    The interesting result would be a *trade-off*: the gate costs ID accuracy and buys shift
    robustness. That trade-off is exactly the invariance-vs-prediction story. **But be
@@ -291,9 +377,11 @@ In order of how much I'd bet on them:
    compute cost and the lowest novelty, and the state-regime result says to expect none
    in-distribution.
 
-**Cheapest next step:** take the existing state-regime code and add the confounded-non-parent
-environment from (1). That's about a day of work and an hour of CPU. If dense doesn't pick up the
-spurious edge there either, drop the idea.
+**Cheapest next step:** the coupling-strength sweep plus a two-environment invariance penalty
+from (1). It reuses `env.py`'s `couple` parameter and costs about a day of work and two hours of
+CPU. If invariance doesn't beat L1 once the spurious edge outranks a true one, drop the idea.
+If it does, the project becomes "sparsity vs invariance as the predictor prior in JEPA world
+models". That framing is more causal, more novel, and maps onto month 10.
 
 ## 7. Files
 

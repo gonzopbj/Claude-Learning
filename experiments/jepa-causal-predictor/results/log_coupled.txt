@@ -1,0 +1,9 @@
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_cpl_L1_lA0.02_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_cpl_L1_lA0.02_s1
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_cpl_L1_lA0.02_s2
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_hard_cpl_L1_lA0.005_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_oracle_cpl_L1_lA0.02_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_oracle_cpl_L1_lA0.02_s1
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_hard_cpl_L1_lA0.005_s1
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_hard_cpl_L1_lA0.005_s2
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_oracle_cpl_L1_lA0.02_s2

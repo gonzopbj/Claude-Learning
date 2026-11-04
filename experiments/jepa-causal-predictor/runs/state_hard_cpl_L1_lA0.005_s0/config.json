@@ -1,0 +1,23 @@
+{
+ "regime": "state",
+ "variant": "hard",
+ "seed": 0,
+ "d": 16,
+ "layers": 1,
+ "W": 3,
+ "bs": 256,
+ "lr": 0.002,
+ "wd": 0.001,
+ "steps": 4000,
+ "lam_sig": 0.09,
+ "lam_A": 0.005,
+ "lam_ent": 0.01,
+ "threads": 1,
+ "log_every": 500,
+ "frozen_from": null,
+ "name": "state_hard_cpl_L1_lA0.005_s0",
+ "verbose": 0,
+ "lam_idm": 0.0,
+ "n_train": 0,
+ "train_env": "coupled"
+}

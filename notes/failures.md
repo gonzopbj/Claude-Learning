@@ -128,3 +128,14 @@ predictable, and the thing you control is the least predictable without the acti
 **Generalizes to:** "the model ignores the distractor" is not a free property of
 joint-embedding world models. Check what the encoder kept before evaluating anything
 downstream of it.
+
+## 2026-11-04 — The sparsity gate pruned a spurious edge for the wrong reason
+**Setup:** coupled world in which a hidden noise makes the distractor predict object 2 without
+causing it (Δ-R² 0.02; true parents 0.064 and 0.042). Hard L1-gated predictor, 3 seeds.
+**Expected:** the gate keeps the spurious edge, because it is predictive.
+**Observed:** the gate pruned it in 3/3 seeds. It also put the weaker *true* edge 3 → 2 on the
+threshold (0.52, 0.50) and cut it in the third seed. Gate order matched Δ-R² order exactly.
+**Why:** an L1 penalty trades an edge against its contribution to the loss. It sees strength,
+not causal status. The spurious edge was simply the weakest.
+**Generalizes to:** "sparse = causal" claims in learned graphs. Test with a spurious correlate
+*stronger* than the weakest true parent; only invariance across environments can separate them.

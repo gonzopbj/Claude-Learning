@@ -185,3 +185,59 @@ Paired difference vs `dense` (same seed), mean [95% CI]:
 | mult | +0.058 [-0.131, +0.248] | -0.025 [-0.149, +0.099] |
 | oracle | -0.005 [-0.151, +0.141] | -0.025 [-0.155, +0.105] |
 | random | -0.400 [-0.479, -0.321] | -0.410 [-0.521, -0.299] |
+
+## Regime: state_n30
+
+### Alignment
+
+| variant | n | min_r2 | mean_r2 |
+|---|---|---|---|
+| dense | 3 | 0.983 ± 0.007 | 0.991 ± 0.002 |
+| hard | 3 | 0.985 ± 0.004 | 0.991 ± 0.002 |
+| oracle | 3 | 0.985 ± 0.006 | 0.991 ± 0.002 |
+
+Columns: `min_r2` = min matched factor→object R²; `mean_r2` = mean matched R²
+
+### Prediction error
+
+| variant | n | id1 | id5 | dist_ratio | do1_ratio | phys_ratio | do1_5 |
+|---|---|---|---|---|---|---|---|
+| dense | 3 | 0.675 ± 0.091 | 0.401 ± 0.026 | 1.071 ± 0.025 | 0.980 ± 0.058 | 1.070 ± 0.048 | 0.428 ± 0.025 |
+| hard | 3 | 0.543 ± 0.024 | 0.376 ± 0.029 | 1.026 ± 0.014 | 0.981 ± 0.053 | 1.120 ± 0.057 | 0.420 ± 0.041 |
+| oracle | 3 | 0.550 ± 0.050 | 0.345 ± 0.021 | 1.043 ± 0.035 | 0.967 ± 0.041 | 1.099 ± 0.013 | 0.362 ± 0.016 |
+
+Columns: `id1` = in-distribution h=1 decoded error / copy; `id5` = same, h=5; `dist_ratio` = distractor-shift / ID error (h=1); `do1_ratio` = do(1) / ID error (h=1, objs 0,2,3); `phys_ratio` = physics-shift / ID error (h=1); `do1_5` = do(1) h=5 decoded error / copy
+
+Paired difference vs `dense` (same seed), mean [95% CI]:
+
+| variant | id1 | dist_ratio | do1_ratio | phys_ratio |
+|---|---|---|---|---|
+| hard | -0.132 [-0.307, +0.042] | -0.045 [-0.126, +0.036] | +0.001 [-0.098, +0.099] | +0.050 [-0.024, +0.125] |
+| oracle | -0.125 [-0.300, +0.050] | -0.028 [-0.158, +0.102] | -0.013 [-0.133, +0.108] | +0.030 [-0.067, +0.127] |
+
+### Graph recovery
+
+| variant | n | gate_auroc | gate_shd | gate_edges | gate_action_ok | jac_auroc | jac_shdk | attn_auroc | jac20 | jac24 | jac_nonedge |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| dense | 3 | – | – | – | – | 0.974 ± 0.023 | 1.333 ± 1.155 | 0.987 ± 0.011 | 0.123 ± 0.034 | 0.063 ± 0.007 | 0.127 ± 0.008 |
+| hard | 3 | 1.000 ± 0.000 | 0.667 ± 0.577 | 2.333 ± 0.577 | 1.000 ± 0.000 | 0.889 ± 0.096 | 1.333 ± 1.155 | 0.889 ± 0.096 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 |
+| oracle | 3 | – | – | – | – | 1.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 |
+
+Columns: `gate_auroc` = AUROC of σ(A); `gate_shd` = SHD at σ>0.5; `gate_edges` = #edges σ>0.5 (true 3); `gate_action_ok` = action column correct; `jac_auroc` = AUROC of Jacobian dependence; `jac_shdk` = Jacobian SHD top-3; `attn_auroc` = AUROC of mean attention; `jac20` = normalized ∂ẑ2/∂z0 (grandparent); `jac24` = normalized ∂ẑ2/∂z_distractor; `jac_nonedge` = mean normalized Jacobian on non-edges
+
+### Planning
+
+| variant | n | plan_id | plan_id15 | plan_dist | plan_id_fd |
+|---|---|---|---|---|---|
+| dense | 3 | 0.283 ± 0.076 | 0.467 ± 0.038 | 0.258 ± 0.038 | 0.165 ± 0.021 |
+| hard | 3 | 0.308 ± 0.063 | 0.583 ± 0.088 | 0.342 ± 0.038 | 0.155 ± 0.009 |
+| oracle | 3 | 0.375 ± 0.075 | 0.583 ± 0.052 | 0.300 ± 0.066 | 0.150 ± 0.017 |
+
+Columns: `plan_id` = success r<0.1, ID; `plan_id15` = success r<0.15, ID; `plan_dist` = success r<0.1, distractor shift; `plan_id_fd` = final distance ID
+
+Paired difference vs `dense` (same seed), mean [95% CI]:
+
+| variant | plan_id | plan_dist |
+|---|---|---|
+| hard | +0.025 [-0.298, +0.348] | +0.083 [+0.047, +0.119] |
+| oracle | +0.092 [+0.056, +0.128] | +0.042 [-0.088, +0.171] |
