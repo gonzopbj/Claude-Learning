@@ -252,6 +252,15 @@ LOWDATA_PLACEHOLDER
   - A CNN rather than a ViT.
   - A latent split into chunks rather than slots.
 - **Probes are linear ridge,** with an MLP check on one run.
+- **Data-version mismatch, found while writing this report.**
+  - The cached train/val/test datasets in `data/` were generated before I lowered object 3's
+    drive noise (`drive_3`) from 0.4 to 0.15 to make the planning task feasible.
+  - So all models were trained, and prediction-scored, in the 0.4 world. Planning episodes ran
+    in the 0.15 world, which is a mild shift: object 3 is less noisy than in training.
+  - Every variant faced the identical shift with the identical episodes, so the paired planning
+    comparisons stand. Absolute planning numbers carry this extra shift, and the oracle-CEM
+    bracket (0.68) was measured in the 0.15 world.
+  - The exploratory coupled-world arm generated fresh data at 0.15 and is self-consistent.
 
 ## 6. If you want to research something here
 
