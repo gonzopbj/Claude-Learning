@@ -54,6 +54,8 @@ DEFAULT_PARAMS = dict(
     drive_3=0.15,       # extra noise injection that keeps 3 oscillating
     ou_theta=0.1, ou_sigma=0.08,   # distractor velocity OU
     clamp_1=None,      # if an (B,2) array: do(p1 = clamp_1, v1 = 0)
+    couple=0.0,        # >0: hidden noise eta_t drives the distractor's velocity now and object 2's next step
+    couple_indep=False,  # True: object 2 gets independent noise of the same size (coupling broken)
 )
 
 SHIFTS = {
@@ -64,6 +66,10 @@ SHIFTS = {
     "distractor": dict(ou_sigma=0.24),
     # hard intervention: object 1 frozen at a random location; 2 still follows 1
     "do1": "clamp",
+    # exploratory arm: a hidden common cause makes the distractor's velocity predict object 2's next
+    # velocity increment (a non-causal but predictive "edge" 4 -> 2). `decoupled` breaks it.
+    "coupled": dict(couple=0.06, ou_theta=0.5),
+    "decoupled": dict(couple=0.06, ou_theta=0.5, couple_indep=True),
 }
 
 
@@ -105,7 +111,16 @@ def step(s: np.ndarray, a: np.ndarray, rng: np.random.Generator, params: dict) -
 
     v_new = v + dt * F / P["mass"] + P["noise_v"] * rng.normal(size=v.shape)
     # distractor: OU velocity, ignores forces entirely
-    v_new[:, 4] = (1 - P["ou_theta"]) * v[:, 4] + P["ou_sigma"] * rng.normal(size=(len(s), 2))
+    eta = rng.normal(size=(len(s), 2))
+    v_new[:, 4] = (1 - P["ou_theta"]) * v[:, 4] + P["ou_sigma"] * eta
+    if P.get("couple", 0) > 0:
+        prev = P.get("_eta_prev")
+        if prev is None or len(prev) != len(s):
+            prev = np.zeros((len(s), 2))
+        if P.get("couple_indep"):
+            prev = rng.normal(size=(len(s), 2))
+        v_new[:, 2] += P["couple"] * prev
+        P["_eta_prev"] = eta
     p_new = p + dt * v_new
 
     # reflecting walls

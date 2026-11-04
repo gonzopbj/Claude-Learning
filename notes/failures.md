@@ -92,3 +92,39 @@ upstream shift changes the downstream residual scale without changing the downst
 mechanism, and the detector cannot tell the two apart.
 **Generalizes to:** change-point detection whose null model is narrower than the world;
 misattribution shows up as false alarms before it shows up as misses.
+
+## 2026-11-04 — A soft attention gate looked empty and constrained nothing
+**Setup:** JEPA predictor (`experiments/jepa-causal-predictor`), attention p_ij ∝ exp(l_ij)·σ(α_ij)
+with an L1 penalty on σ(α), state regime with a known 3-edge graph.
+**Expected:** σ(α) above 0.5 on true edges, near 0 elsewhere.
+**Observed:** every off-diagonal σ(α) was between 0.07 and 0.17, so 0 edges above threshold. Yet
+the ranking was perfect (AUROC 0.996), and the Jacobian showed full-strength true edges.
+**Why:** exp(l)·σ(α) = exp(l + log σ(α)). The gate is an additive logit bias that the learned
+logit cancels. The penalty shrinks σ(α) at no cost to the loss.
+**Generalizes to:** any finite multiplicative gate inside a softmax. Only hard (sampled or
+thresholded) masks constrain. Read soft gates as rankings, never as graphs.
+
+## 2026-11-04 — A hard Gumbel gate collapsed to the empty graph, including the action edge
+**Setup:** same predictor, straight-through Gumbel-sigmoid mask, penalty λ·mean σ(α).
+**Expected:** a monotone λ trade-off between edges kept and prediction loss.
+**Observed:** at λ ≥ 0.02 (state) and λ = 0.005 (pixels) the gate pruned *every* edge,
+including action → object 0. Validation loss doubled, and pixel planning became independent of
+the model: two seeds gave byte-identical trajectories. At λ = 0.005 in the state regime it found
+the exact graph in 5/5 seeds.
+**Why:** an edge that is weak early in training, before the encoder or predictor carries the
+signal, is pruned. A pruned edge gets no gradient through the mask, so it never comes back.
+**Generalizes to:** any learned hard mask trained jointly with its inputs. Warm-start dense or
+anneal λ, and always check that the edges you need (here, the action) survive.
+
+## 2026-11-04 — End-to-end pixel JEPA encoded the distractor and dropped the controllable objects
+**Setup:** CNN on two stacked 32×32 frames, latent MSE + SIGReg, no stop-gradient (LeWM-style).
+**Expected:** a weak but object-related representation; chunks not aligned (pre-registered).
+**Observed:** the slow distractor's position was decoded at R² 0.98. Fast action-driven objects
+were at 0.45–0.6, velocities at 0.04, and an MLP probe did no better. Prediction was no better
+than copying the last frame, and planning was at the random floor. An inverse-dynamics loss
+recovered only the directly pushed object (0.57 → 0.92).
+**Why:** the JEPA loss rewards predictable features. The slowest thing on screen is the most
+predictable, and the thing you control is the least predictable without the action.
+**Generalizes to:** "the model ignores the distractor" is not a free property of
+joint-embedding world models. Check what the encoder kept before evaluating anything
+downstream of it.

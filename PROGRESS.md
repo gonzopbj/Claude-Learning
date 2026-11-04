@@ -68,6 +68,7 @@ milestones; listed so they are not mistaken for it.
 | Date | What | Where | Student's role |
 |---|---|---|---|
 | 2026-09-21 | Mechanism-shift testbed: six continual-learning requirements tested on a synthetic SCM under sparse mechanism shifts, 14 agents, nine pre-registered predictions | `experiments/mechanism-shift/` | Asked for it; did not write it. To be reread in months 2, 5 and 10 when the pieces are rebuilt from scratch. |
+| 2026-11-04 | Holiday Idea 2 pilot: JEPA world model with a learnable sparse adjacency gating attention between latent factors; 12 pre-registered predictions plus two exploratory arms; go/no-go report | `experiments/jepa-causal-predictor/REPORT.md` | Asked for it as a feasibility check before choosing a research project; did not write it. Verdict: don't pursue as stated (see report §6 for what might be). Touches attention-as-edges (open question above) and the month-9/10 convergences. |
 
 ---
 

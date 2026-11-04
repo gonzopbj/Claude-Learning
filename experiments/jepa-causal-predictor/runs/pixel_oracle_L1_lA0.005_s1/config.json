@@ -1,0 +1,20 @@
+{
+ "regime": "pixel",
+ "variant": "oracle",
+ "seed": 1,
+ "d": 16,
+ "layers": 1,
+ "W": 3,
+ "bs": 96,
+ "lr": 0.002,
+ "wd": 0.001,
+ "steps": 3000,
+ "lam_sig": 0.09,
+ "lam_A": 0.005,
+ "lam_ent": 0.01,
+ "threads": 1,
+ "log_every": 500,
+ "frozen_from": null,
+ "name": "pixel_oracle_L1_lA0.005_s1",
+ "verbose": 0
+}

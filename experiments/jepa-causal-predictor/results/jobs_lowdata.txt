@@ -1,0 +1,9 @@
+1 --regime state --variant dense --seed 0 --n_train 30
+1 --regime state --variant dense --seed 1 --n_train 30
+1 --regime state --variant dense --seed 2 --n_train 30
+1 --regime state --variant oracle --seed 0 --n_train 30
+1 --regime state --variant oracle --seed 1 --n_train 30
+1 --regime state --variant oracle --seed 2 --n_train 30
+1 --regime state --variant hard --lam_A 0.005 --seed 0 --n_train 30
+1 --regime state --variant hard --lam_A 0.005 --seed 1 --n_train 30
+1 --regime state --variant hard --lam_A 0.005 --seed 2 --n_train 30

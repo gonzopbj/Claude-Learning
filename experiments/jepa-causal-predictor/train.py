@@ -35,7 +35,7 @@ def get_dataset(split: str, shift: str = "id", B: int | None = None, T: int | No
     defaults = {"train": (1000, 50, 0), "val": (100, 50, 1), "test": (200, 40, 2)}
     b, t, base = defaults[split]
     B, T = B or b, T or t
-    seed = base * 100 + {"id": 0, "physics": 1, "distractor": 2, "do1": 3}[shift]
+    seed = base * 100 + {"id": 0, "physics": 1, "distractor": 2, "do1": 3, "coupled": 4, "decoupled": 5}[shift]
     path = os.path.join(DATA, f"{split}_{shift}_{B}x{T}.npz")
     if not os.path.exists(path):
         S, A = rollout(B, T, np.random.default_rng(seed), shift)
@@ -116,8 +116,12 @@ def train(cfg: dict) -> str:
         D = 2 * model.pred.K * cfg["d"]
         model.idm = torch.nn.Sequential(torch.nn.Linear(D, 256), torch.nn.GELU(), torch.nn.Linear(256, 2))
     frozen = cfg.get("frozen_from")
-    tr = Windows(get_dataset("train"), cfg["regime"], cfg["W"])
-    va = Windows(get_dataset("val"), cfg["regime"], cfg["W"])
+    env_tr = cfg.get("train_env", "id")
+    ds = get_dataset("train", env_tr)
+    if cfg.get("n_train"):
+        ds = {k: v[:cfg["n_train"]] for k, v in ds.items()}      # low-data arm: first n episodes
+    tr = Windows(ds, cfg["regime"], cfg["W"])
+    va = Windows(get_dataset("val", env_tr), cfg["regime"], cfg["W"])
     if frozen:
         src = torch.load(os.path.join(ROOT, "runs", frozen, "model.pt"))
         enc_state = {k[4:]: v for k, v in src.items() if k.startswith("enc.")}
@@ -160,7 +164,7 @@ def train(cfg: dict) -> str:
 
 DEFAULTS = dict(regime="state", variant="dense", seed=0, d=16, layers=1, W=3, bs=256, lr=2e-3, wd=1e-3,
                 steps=4000, lam_sig=0.09, lam_A=0.02, lam_ent=0.01, threads=1, log_every=500,
-                frozen_from=None, name=None, verbose=1, lam_idm=0.0)
+                frozen_from=None, name=None, verbose=1, lam_idm=0.0, n_train=0, train_env="id")
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -170,5 +174,7 @@ if __name__ == "__main__":
     if cfg["name"] is None:
         tag = "_fz" if cfg["frozen_from"] else ""
         tag += "_idm" if cfg["lam_idm"] > 0 else ""
+        tag += f"_n{cfg['n_train']}" if cfg["n_train"] else ""
+        tag += "_cpl" if cfg["train_env"] == "coupled" else ""
         cfg["name"] = f"{cfg['regime']}_{cfg['variant']}{tag}_L{cfg['layers']}_lA{cfg['lam_A']}_s{cfg['seed']}"
     print("->", train(cfg))

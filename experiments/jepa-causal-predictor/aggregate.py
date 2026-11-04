@@ -28,6 +28,8 @@ def load_all():
         r = json.load(open(f))
         if r["seed"] >= 100:          # lambda-selection runs
             continue
+        if r.get("train_env", "id") != "id":   # coupled arm: see analyze_coupled.py
+            continue
         rows.append(r)
     return rows
 
@@ -83,7 +85,7 @@ def metrics(r):
 def group(rows):
     G = defaultdict(dict)       # (regime, frozen) -> variant -> seed -> metrics
     for r in rows:
-        key = (r["regime"] + ("_idm" if r.get("idm") else ""), r["frozen"])
+        key = (r["regime"] + ("_idm" if r.get("idm") else "") + (f"_n{r['n_train']}" if r.get("n_train") else "") + ("_cpl" if r.get("train_env", "id") != "id" else ""), r["frozen"])
         G[key].setdefault(r["variant"], {})[r["seed"]] = (metrics(r), r)
     return G
 

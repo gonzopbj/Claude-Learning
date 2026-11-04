@@ -1,0 +1,9 @@
+0 --regime state --variant dense --seed 0 --train_env coupled
+0 --regime state --variant dense --seed 1 --train_env coupled
+0 --regime state --variant dense --seed 2 --train_env coupled
+0 --regime state --variant hard --lam_A 0.005 --seed 0 --train_env coupled
+0 --regime state --variant hard --lam_A 0.005 --seed 1 --train_env coupled
+0 --regime state --variant hard --lam_A 0.005 --seed 2 --train_env coupled
+0 --regime state --variant oracle --seed 0 --train_env coupled
+0 --regime state --variant oracle --seed 1 --train_env coupled
+0 --regime state --variant oracle --seed 2 --train_env coupled

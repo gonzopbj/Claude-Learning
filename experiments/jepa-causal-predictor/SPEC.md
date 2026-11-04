@@ -141,3 +141,42 @@ from pixels?
 | P10 | Pixel, end-to-end: dense chunks do not align (min matched R² < 0.8). |
 | P11 | Pixel, end-to-end: the oracle mask raises mean matched R² by more than 0.1 over dense (sparsity breaks the rotation symmetry). This is the genuinely uncertain one, roughly a coin flip. |
 | P12 | Pixel: the learned hard gate's graph recovery is undefined or near chance, unless P11 holds. |
+
+## Addendum: exploratory low-data arm (added after the main results, before running it)
+
+The main state-regime grid found that the dense predictor already learns the sparse graph:
+non-edge Jacobian ≈ 1 % of the self term. That is expected, because with fully observed Markov
+state the Bayes-optimal one-step predictor depends only on the parents. A structural prior can
+then only help when the data cannot pin that down. This arm trains on the first 30 training
+episodes (out of 1000) with the same 4000 steps: `dense`, `hard` (λ_A = 0.005) and `oracle`,
+seeds 0–2, state regime.
+
+It is exploratory and not part of the pre-registration. Prediction (P13): `oracle` beats `dense`
+on in-distribution h = 5 decoded error by more than 10 %. `hard` sits between them only if its
+gate still recovers the graph at n = 30.
+
+## Addendum 2: exploratory spurious-edge arm (written before running it)
+
+This is the experiment `docs/design_critique.md` (point 6) asked for. The main grid didn't
+include it.
+
+**World (`coupled`).** A hidden noise η_t drives the distractor's velocity at step t and is added
+(× 0.06) to object 2's velocity at step t+1. Distractor mean reversion θ = 0.5, so its velocity
+mostly reflects the latest η. The distractor therefore *predicts* object 2 without causing it.
+- A linear check gives a Δ-R² of 0.020 for 4 → 2, against 0.064 for 1 → 2 and 0.042 for 3 → 2.
+- Test shift `decoupled`: object 2 gets independent noise of the same size, and the distractor's
+  marginal is unchanged.
+- This world uses `drive_3 = 0.15`. The main grid's cached data used 0.4; see `REPORT.md` §5.
+
+**Runs.** State regime, `dense`, `hard` (λ_A = 0.005) and `oracle` (the physical graph, without
+4 → 2), seeds 0–2. No planning.
+
+**Prediction (P14).**
+- `dense` learns the 4 → 2 dependence: normalised Jacobian ∂ẑ₂/∂z₄ > 0.05, against 0.009 in the
+  main grid.
+- `hard` keeps the 4 → 2 gate, because sparsity prunes *weak* edges, not *non-causal* ones.
+- Both degrade on object 2 under `decoupled`.
+- `oracle` doesn't degrade but is worse in-distribution on object 2.
+
+If `hard` instead prunes 4 → 2 and stays robust, that is the first positive evidence for the
+idea in this pilot.

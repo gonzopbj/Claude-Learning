@@ -23,6 +23,7 @@ from train import ROOT, encode_all, get_dataset, observations
 
 K = E.N_OBJ
 NON_DISTRACTOR = [0, 1, 2, 3]
+BASE = "id"        # training/test world; "coupled" for the exploratory spurious-edge arm
 
 
 def load(run: str):
@@ -40,7 +41,7 @@ def encode_states(model, states: np.ndarray, regime: str) -> torch.Tensor:
 
 # ----------------------------------------------------------------------------- probes / alignment
 def fit_probe(model, regime):
-    ds = get_dataset("train")
+    ds = get_dataset("train", BASE)
     S = ds["states"][:300]
     z = encode_states(model, S, regime).numpy()
     Z = z.reshape(-1, K * z.shape[-1])
@@ -70,7 +71,7 @@ def decode(probe, z: torch.Tensor) -> np.ndarray:
 # ----------------------------------------------------------------------------- prediction error
 @torch.no_grad()
 def prediction_errors(model, cfg, probe, shift: str, H=(1, 5)):
-    ds = get_dataset("test", shift)
+    ds = get_dataset("test", BASE if shift == "id" else shift)
     S, A = ds["states"], ds["actions"]
     z = encode_states(model, S, cfg["regime"])         # obs k <-> state k+1
     act = torch.tensor(A[:, 1:])
@@ -116,7 +117,7 @@ def prediction_errors(model, cfg, probe, shift: str, H=(1, 5)):
 # ----------------------------------------------------------------------------- graph recovery
 def jacobian_graph(model, cfg, perm):
     """J[i, j] = E || d zhat_i / d z_j ||_F (objects ordered by matched factor), plus action column."""
-    ds = get_dataset("test")
+    ds = get_dataset("test", BASE)
     z = encode_states(model, ds["states"][:50], cfg["regime"])[:, :-1].reshape(-1, K, cfg["d"])[:400]
     a = torch.tensor(ds["actions"][:50, 1:]).reshape(-1, 2)[:400]
     z = z[:, perm]                                     # reorder factors to object order
@@ -137,7 +138,7 @@ def jacobian_graph(model, cfg, perm):
 
 @torch.no_grad()
 def attention_graph(model, cfg, perm):
-    ds = get_dataset("test")
+    ds = get_dataset("test", BASE)
     z = encode_states(model, ds["states"][:50], cfg["regime"])[:, :-1].reshape(-1, K, cfg["d"])[:400]
     a = torch.tensor(ds["actions"][:50, 1:]).reshape(-1, 2)[:400]
     model.pred(z, a)
@@ -247,16 +248,18 @@ def plan_episodes(model, cfg, probe, shift="id", n_env=40, steps=75, H=15, repla
 
 # ----------------------------------------------------------------------------- main
 def evaluate(run: str, do_plan: bool = True):
+    global BASE
     model, cfg = load(run)
+    BASE = cfg.get("train_env", "id")
     probe, R, perm, full_r2 = fit_probe(model, cfg["regime"])
     matched = R[perm, np.arange(K)]
     res = dict(name=cfg["name"], regime=cfg["regime"], variant=cfg["variant"], seed=cfg["seed"],
-               frozen=bool(cfg.get("frozen_from")), idm=cfg.get("lam_idm", 0) > 0, lam_A=cfg["lam_A"], layers=cfg["layers"],
+               frozen=bool(cfg.get("frozen_from")), idm=cfg.get("lam_idm", 0) > 0, n_train=cfg.get("n_train", 0), train_env=BASE, lam_A=cfg["lam_A"], layers=cfg["layers"],
                alignment=dict(R=R.round(3).tolist(), perm=perm.tolist(), matched_r2=matched.round(3).tolist(),
                               min_matched_r2=float(matched.min()),
                               probe_r2_pos=full_r2[:, :2].mean(1).round(3).tolist(),
                               probe_r2_vel=full_r2[:, 2:].mean(1).round(3).tolist()))
-    res["pred"] = {sh: prediction_errors(model, cfg, probe, sh) for sh in ["id", "physics", "distractor", "do1"]}
+    res["pred"] = {sh: prediction_errors(model, cfg, probe, sh) for sh in (["id", "physics", "distractor", "do1"] if BASE == "id" else ["id", "decoupled"])}
     res["graph_jac"] = graph_scores(jacobian_graph(model, cfg, perm), "jac")
     res["graph_attn"] = graph_scores(attention_graph(model, cfg, perm), "attn")
     if cfg["variant"] in ("soft", "hard", "mult"):
@@ -267,7 +270,7 @@ def evaluate(run: str, do_plan: bool = True):
                 Gm[i, j] = G[perm[i], perm[j]]
             Gm[i, K] = G[perm[i], K]
         res["graph_gate"] = graph_scores(Gm, "gate")
-    if do_plan:
+    if do_plan and BASE == "id":
         res["plan"] = {sh: plan_episodes(model, cfg, probe, sh) for sh in ["id", "distractor"]}
     json.dump(res, open(os.path.join(run, "eval.json"), "w"), indent=1)
     return res
