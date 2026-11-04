@@ -117,7 +117,7 @@ def prediction_errors(model, cfg, probe, shift: str, H=(1, 5)):
 def jacobian_graph(model, cfg, perm):
     """J[i, j] = E || d zhat_i / d z_j ||_F (objects ordered by matched factor), plus action column."""
     ds = get_dataset("test")
-    z = encode_states(model, ds["states"][:50], cfg["regime"]).reshape(-1, K, cfg["d"])[:400]
+    z = encode_states(model, ds["states"][:50], cfg["regime"])[:, :-1].reshape(-1, K, cfg["d"])[:400]
     a = torch.tensor(ds["actions"][:50, 1:]).reshape(-1, 2)[:400]
     z = z[:, perm]                                     # reorder factors to object order
     inv = np.argsort(perm)
@@ -138,7 +138,7 @@ def jacobian_graph(model, cfg, perm):
 @torch.no_grad()
 def attention_graph(model, cfg, perm):
     ds = get_dataset("test")
-    z = encode_states(model, ds["states"][:50], cfg["regime"]).reshape(-1, K, cfg["d"])[:400]
+    z = encode_states(model, ds["states"][:50], cfg["regime"])[:, :-1].reshape(-1, K, cfg["d"])[:400]
     a = torch.tensor(ds["actions"][:50, 1:]).reshape(-1, 2)[:400]
     model.pred(z, a)
     P = model.pred.last_attn[0].mean((0, 1)).numpy()[:K]      # (K, K+1) in factor order

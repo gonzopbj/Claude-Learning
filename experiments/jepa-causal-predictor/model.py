@@ -197,8 +197,9 @@ class GatedPredictor(nn.Module):
             if self.variant == "mult":
                 p = torch.softmax(logits * G_full, -1)
             else:
-                logits = logits - logits.amax(-1, keepdim=True)
-                e = torch.exp(logits) * G_full
+                live = (G_full > 0).expand_as(logits)                   # max over unmasked entries only
+                mx = logits.masked_fill(~live, float("-inf")).amax(-1, keepdim=True)
+                e = torch.exp((logits - mx).masked_fill(~live, float("-inf"))) * G_full
                 p = e / e.sum(-1, keepdim=True)
             attn_record.append(p.detach())
             x = x + blk["o"]((p @ v).transpose(1, 2).reshape(B, K + 1, self.width))

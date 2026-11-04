@@ -2,7 +2,7 @@
 
   python train.py --regime state --variant soft --seed 0
   python train.py --regime pixel --variant dense --seed 0                      # end-to-end
-  python train.py --regime pixel --variant hard --seed 0 --frozen_from runs/pixel_dense_s0   # stage 2
+  python train.py --regime pixel --variant hard --seed 0 --frozen_from pixel_dense_L1_lA0.02_s0   # stage 2
 
 Loss (LeWM-style, no stop-gradient, no EMA):
   mean_t ||rollout(z_0, a_0..a_{t-1})_t - z_t||^2  +  lam_sig * SIGReg(z)  +  lam_A * mean sigma(A_offdiag)
