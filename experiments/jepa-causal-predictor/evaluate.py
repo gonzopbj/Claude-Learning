@@ -28,7 +28,7 @@ NON_DISTRACTOR = [0, 1, 2, 3]
 def load(run: str):
     cfg = json.load(open(os.path.join(run, "config.json")))
     m = WorldModel(cfg["regime"], cfg["variant"], d=cfg["d"], layers=cfg["layers"], seed=cfg["seed"])
-    m.load_state_dict(torch.load(os.path.join(run, "model.pt")))
+    m.load_state_dict(torch.load(os.path.join(run, "model.pt")), strict=False)   # ignores optional idm head
     m.eval()
     return m, cfg
 
@@ -251,7 +251,7 @@ def evaluate(run: str, do_plan: bool = True):
     probe, R, perm, full_r2 = fit_probe(model, cfg["regime"])
     matched = R[perm, np.arange(K)]
     res = dict(name=cfg["name"], regime=cfg["regime"], variant=cfg["variant"], seed=cfg["seed"],
-               frozen=bool(cfg.get("frozen_from")), lam_A=cfg["lam_A"], layers=cfg["layers"],
+               frozen=bool(cfg.get("frozen_from")), idm=cfg.get("lam_idm", 0) > 0, lam_A=cfg["lam_A"], layers=cfg["layers"],
                alignment=dict(R=R.round(3).tolist(), perm=perm.tolist(), matched_r2=matched.round(3).tolist(),
                               min_matched_r2=float(matched.min()),
                               probe_r2_pos=full_r2[:, :2].mean(1).round(3).tolist(),

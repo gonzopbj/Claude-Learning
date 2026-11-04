@@ -88,8 +88,13 @@ def loss_terms(model: WorldModel, obs, act, cfg, frozen=False):
         sig = model.sigreg(z[:, t].flatten(-2))                 # (B, K*d)
     sp = model.pred.sparsity()
     ent = model.pred.attn_entropy() if cfg["variant"] == "dense_ent" else torch.zeros(())
-    total = pred + cfg["lam_sig"] * sig + cfg["lam_A"] * sp + cfg["lam_ent"] * ent
-    return total, dict(pred=pred.item(), sig=sig.item(), sparsity=sp.item(), ent=ent.item())
+    idm = torch.zeros(())
+    if cfg.get("lam_idm", 0) > 0 and not frozen:
+        # inverse dynamics (EB-JEPA): predict a_t from (z_t, z_{t+1}); forces action-relevant content
+        pair = torch.cat([z[:, :-1].flatten(-2), z[:, 1:].flatten(-2)], -1)
+        idm = ((model.idm(pair) - act) ** 2).mean()
+    total = pred + cfg["lam_sig"] * sig + cfg["lam_A"] * sp + cfg["lam_ent"] * ent + cfg.get("lam_idm", 0) * idm
+    return total, dict(pred=pred.item(), sig=sig.item(), sparsity=sp.item(), ent=ent.item(), idm=idm.item())
 
 
 @torch.no_grad()
@@ -107,6 +112,9 @@ def train(cfg: dict) -> str:
     os.makedirs(out, exist_ok=True)
 
     model = WorldModel(cfg["regime"], cfg["variant"], d=cfg["d"], layers=cfg["layers"], seed=cfg["seed"])
+    if cfg.get("lam_idm", 0) > 0:
+        D = 2 * model.pred.K * cfg["d"]
+        model.idm = torch.nn.Sequential(torch.nn.Linear(D, 256), torch.nn.GELU(), torch.nn.Linear(256, 2))
     frozen = cfg.get("frozen_from")
     tr = Windows(get_dataset("train"), cfg["regime"], cfg["W"])
     va = Windows(get_dataset("val"), cfg["regime"], cfg["W"])
@@ -152,7 +160,7 @@ def train(cfg: dict) -> str:
 
 DEFAULTS = dict(regime="state", variant="dense", seed=0, d=16, layers=1, W=3, bs=256, lr=2e-3, wd=1e-3,
                 steps=4000, lam_sig=0.09, lam_A=0.02, lam_ent=0.01, threads=1, log_every=500,
-                frozen_from=None, name=None, verbose=1)
+                frozen_from=None, name=None, verbose=1, lam_idm=0.0)
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -161,5 +169,6 @@ if __name__ == "__main__":
     cfg = vars(ap.parse_args())
     if cfg["name"] is None:
         tag = "_fz" if cfg["frozen_from"] else ""
+        tag += "_idm" if cfg["lam_idm"] > 0 else ""
         cfg["name"] = f"{cfg['regime']}_{cfg['variant']}{tag}_L{cfg['layers']}_lA{cfg['lam_A']}_s{cfg['seed']}"
     print("->", train(cfg))

@@ -83,7 +83,7 @@ def metrics(r):
 def group(rows):
     G = defaultdict(dict)       # (regime, frozen) -> variant -> seed -> metrics
     for r in rows:
-        key = (r["regime"], r["frozen"])
+        key = (r["regime"] + ("_idm" if r.get("idm") else ""), r["frozen"])
         G[key].setdefault(r["variant"], {})[r["seed"]] = (metrics(r), r)
     return G
 
@@ -239,7 +239,7 @@ def main():
             fig_bars(G, key, [("plan_id", "ID"), ("plan_dist", "distractor ×3")], f"planning_{tag}", "success rate")
         fig_bars(G, key, [("jac_auroc", "Jacobian"), ("attn_auroc", "attention"), ("gate_auroc", "gate")],
                  f"graph_auroc_{tag}", "graph-recovery AUROC")
-        if regime == "pixel":
+        if regime.startswith("pixel"):
             fig_alignment(G, key, tag)
     open(os.path.join(ROOT, "results", "summary.md"), "w").write("\n".join(out))
     json.dump({f"{k[0]}{'_frozen' if k[1] else ''}": {v: {s: G[k][v][s][0] for s in G[k][v]} for v in G[k]} for k in G},
