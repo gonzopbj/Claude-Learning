@@ -1,0 +1,4 @@
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/pixel_dense_L1_lA0.005_s1
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/pixel_oracle_L1_lA0.005_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/pixel_dense_L1_lA0.005_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/pixel_hard_L1_lA0.005_s0
