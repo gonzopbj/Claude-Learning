@@ -1,0 +1,37 @@
+1 --regime pixel --variant dense --lam_A 0.005 --seed 0 --bs 96 --steps 3000
+1 --regime pixel --variant hard --lam_A 0.005 --seed 0 --bs 96 --steps 3000
+1 --regime pixel --variant oracle --lam_A 0.005 --seed 0 --bs 96 --steps 3000
+1 --regime pixel --variant dense --lam_A 0.005 --seed 1 --bs 96 --steps 3000
+1 --regime pixel --variant hard --lam_A 0.005 --seed 1 --bs 96 --steps 3000
+1 --regime pixel --variant oracle --lam_A 0.005 --seed 1 --bs 96 --steps 3000
+1 --regime state --variant dense --seed 0
+1 --regime state --variant oracle --seed 0
+1 --regime state --variant soft --lam_A 0.1 --seed 0
+1 --regime state --variant hard --lam_A 0.005 --seed 0
+1 --regime state --variant random --seed 0
+1 --regime state --variant dense --seed 1
+1 --regime state --variant oracle --seed 1
+1 --regime state --variant soft --lam_A 0.1 --seed 1
+1 --regime state --variant hard --lam_A 0.005 --seed 1
+1 --regime state --variant random --seed 1
+1 --regime state --variant dense --seed 2
+1 --regime state --variant oracle --seed 2
+1 --regime state --variant soft --lam_A 0.1 --seed 2
+1 --regime state --variant hard --lam_A 0.005 --seed 2
+1 --regime state --variant random --seed 2
+1 --regime state --variant dense --seed 3
+1 --regime state --variant oracle --seed 3
+1 --regime state --variant soft --lam_A 0.1 --seed 3
+1 --regime state --variant hard --lam_A 0.005 --seed 3
+1 --regime state --variant random --seed 3
+1 --regime state --variant dense --seed 4
+1 --regime state --variant oracle --seed 4
+1 --regime state --variant soft --lam_A 0.1 --seed 4
+1 --regime state --variant hard --lam_A 0.005 --seed 4
+1 --regime state --variant random --seed 4
+1 --regime state --variant dense_ent --seed 0
+1 --regime state --variant mult --lam_A 0.02 --seed 0
+1 --regime state --variant dense_ent --seed 1
+1 --regime state --variant mult --lam_A 0.02 --seed 1
+1 --regime state --variant dense_ent --seed 2
+1 --regime state --variant mult --lam_A 0.02 --seed 2
