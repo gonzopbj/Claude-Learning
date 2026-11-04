@@ -1,0 +1,4 @@
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_n30_L1_lA0.02_s1
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_n30_L1_lA0.02_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_oracle_n30_L1_lA0.02_s0
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_dense_n30_L1_lA0.02_s2
