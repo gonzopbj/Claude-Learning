@@ -151,12 +151,20 @@ _GX, _GY = np.meshgrid(_grid, _grid, indexing="xy")   # (RES, RES)
 BLOB_SIGMA = 1.3 / RES
 
 
-def render(states: np.ndarray) -> np.ndarray:
-    """states (..., N_OBJ, 4) -> images (..., 3, RES, RES) float32 in [0,1], max-composited blobs."""
+def render(states: np.ndarray, chunk: int = 4096) -> np.ndarray:
+    """states (..., N_OBJ, 4) -> images (..., 3, RES, RES) float32 in [0,1], max-composited blobs.
+    Rendered in chunks in float32 to bound memory."""
     lead = states.shape[:-2]
-    st = states.reshape(-1, N_OBJ, STATE_DIM)
-    px, py = st[:, :, 0], st[:, :, 1]
-    d2 = (_GX[None, None] - px[:, :, None, None]) ** 2 + (_GY[None, None] - py[:, :, None, None]) ** 2
-    blob = np.exp(-d2 / (2 * BLOB_SIGMA ** 2))                         # (M, N, R, R)
-    img = (blob[:, :, None] * COLORS[None, :, :, None, None]).max(1)   # (M, 3, R, R)
-    return img.reshape(*lead, 3, RES, RES).astype(np.float32)
+    st = states.reshape(-1, N_OBJ, STATE_DIM).astype(np.float32)
+    out = np.empty((len(st), 3, RES, RES), np.float32)
+    gx, gy = _GX.astype(np.float32), _GY.astype(np.float32)
+    col = COLORS.astype(np.float32)
+    for i in range(0, len(st), chunk):
+        px, py = st[i:i + chunk, :, 0], st[i:i + chunk, :, 1]
+        d2 = (gx[None, None] - px[:, :, None, None]) ** 2 + (gy[None, None] - py[:, :, None, None]) ** 2
+        blob = np.exp(-d2 / np.float32(2 * BLOB_SIGMA ** 2))               # (m, N, R, R)
+        img = np.zeros((len(blob), 3, RES, RES), np.float32)
+        for n in range(N_OBJ):
+            np.maximum(img, blob[:, n, None] * col[n, :, None, None], out=img)
+        out[i:i + chunk] = img
+    return out.reshape(*lead, 3, RES, RES)
