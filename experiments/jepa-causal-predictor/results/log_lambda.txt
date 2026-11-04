@@ -1,0 +1,3 @@
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_soft_L1_lA0.1_s100
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_soft_L1_lA0.02_s100
+done /home/user/Claude-Learning/experiments/jepa-causal-predictor/runs/state_soft_L1_lA0.005_s100
