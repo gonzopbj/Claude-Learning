@@ -1,0 +1,6 @@
+0 --regime state --variant soft --lam_A 0.005 --seed 100
+0 --regime state --variant soft --lam_A 0.02 --seed 100
+0 --regime state --variant soft --lam_A 0.1 --seed 100
+0 --regime state --variant hard --lam_A 0.005 --seed 100
+0 --regime state --variant hard --lam_A 0.02 --seed 100
+0 --regime state --variant hard --lam_A 0.1 --seed 100
