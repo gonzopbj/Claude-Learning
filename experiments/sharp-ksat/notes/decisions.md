@@ -40,10 +40,15 @@ Autonomous run. Each entry: decision, then why.
 11. **Anthropic: tables as tensors, not lazy queries.** The paper evaluates W̃_γ(Θ) on demand
     (2^{≈5S/K} work per query). I materialise merged-part tensors with einsum. Same value, more
     memory. This limits the instance sizes that can be run.
-12. **Timeouts.** The task asks for 10 minutes per instance and ≥10 instances per point. That is
-    infeasible inside ~2 h of compute for 5 methods × 5 families. I use **60 s per instance**, 10
-    instances per point, and stop scaling a method on a family once the median instance times out.
-    Growth exponents are fitted only on points where all instances finished.
+12. **Timeouts and instance counts.** The task asks for 10 minutes per instance and ≥10 instances
+    per point. That is infeasible inside ~2 h of compute for 7 methods × 6 families. I use **60 s
+    per instance**. Scaling for a (method, family) stops once the median instance exceeds 15 s
+    (a quarter of the timeout: the next step would almost surely time out) or more than half the
+    instances fail. Random ratio 2 and ratio 4.26 use **10 instances per point**. Ratio 2 alone
+    took ≈35 min, so ratio 6 and planted use **5 instances per point**. Pigeonhole and grid
+    instances are deterministic, so they use 3 timing repeats. Growth exponents are fitted only on
+    points where every instance finished and the median exceeds 0.05 s (to stay above process and
+    import noise).
 13. **No external exact counter.** No sharpSAT-TD, d4 or ganak binary is installed, and building
     one is out of scope. The DPLL counter (with component caching) and a tensor-network contractor
     (opt_einsum) are the practical baselines.
