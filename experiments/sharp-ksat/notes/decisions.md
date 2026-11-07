@@ -14,9 +14,11 @@ Autonomous run. Each entry: decision, then why.
    scoped to one repo, and raw access worked only for the OpenAI paper and docs. Lean scope is taken
    from each paper's own statement.
 4. **Exact arithmetic via modular reduction (OpenAI).** The paper works over ℚ with exact rationals.
-   I work modulo a prime p (2^61 − 1 by default). All divisions are by small integers, invertible
-   mod p. The count is < 2^n < p for n ≤ 60, so its residue is the count. Same result, much faster.
-   Documented as an implementation deviation, not an algorithmic one.
+   I work modulo 31-bit primes (2^31 − 1, plus more primes combined by CRT until their product
+   exceeds 2^(occurring vars)). The 31-bit size keeps int64 numpy products from overflowing. All
+   divisions are by small integers, invertible mod p, and the count is below the modulus, so the
+   residue is the count. Same result, much faster. Documented as an implementation deviation,
+   not an algorithmic one.
 5. **OpenAI: free parameters (r, Q, R).** The paper's (2.19) parameters are only defined for
    astronomically large n: r ≥ 2 needs √log₂n ≥ 2(log₂log₂n)². I expose r, Q, R as knobs. The
    algorithm is exact for *any* valid choice (interval I ⊆ [0,Q], R ≤ Q+1). Only cost changes.
@@ -45,3 +47,16 @@ Autonomous run. Each entry: decision, then why.
 13. **No external exact counter.** No sharpSAT-TD, d4 or ganak binary is installed, and building
     one is out of scope. The DPLL counter (with component caching) and a tensor-network contractor
     (opt_einsum) are the practical baselines.
+14. **Anthropic: occurrence chains ordered by group.** §6 says the occurrences of a variable may
+    be chained "in any order". I chain them in group order, so each variable adds at most one
+    edge bit per pair of consecutive groups it touches. Edge bits are then ≤ n(K−1), instead of up
+    to ≈ 3m for an arbitrary order.
+15. **Anthropic: swap-only grouping.** Group sizes stay balanced (they differ by at most 1). The
+    first heuristic was allowed to empty groups. On a test formula it collapsed four groups into
+    two, which is legal under (G1)/(G2) but leaves the 2×2 grid with no diagonals.
+16. **Anthropic: `max_L = 6`.** Dense row tensors have up to 2^{4L} entries. L = 7 would need
+    ≈2 GB per tensor. Instances with L > 6 are reported as `oom`, not as timeouts.
+17. **Test sizes for the paper algorithms.** Instances have n ≤ 20 declared variables. For the
+    OpenAI scheme at most 10 variables occur (R = 1), or at most 6 (R = 2, Hermite path). For the
+    Anthropic scheme m ≤ 9. Their cost is ≈ 2^(occurring vars) × Python overhead, so hundreds of
+    n = 20 dense instances would take hours. The baselines are tested on dense n ≤ 20 instances.
