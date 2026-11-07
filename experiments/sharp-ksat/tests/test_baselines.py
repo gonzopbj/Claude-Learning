@@ -41,3 +41,15 @@ def test_structured():
     assert tn_count(pigeonhole(3)) == 0
     g = grid_independent_sets(4, 4)
     assert dpll_count(g) == tn_count(g) == brute_force(g) == 1234  # OEIS A006506
+
+
+def test_tn_exact_beyond_float_precision():
+    """Regression: n > 52 must use exact integer arithmetic (found by the benchmark cross-check)."""
+    def transfer(w, h=3):
+        states = [s for s in range(1 << h) if not (s & (s >> 1))]
+        v = {s: 1 for s in states}
+        for _ in range(w - 1):
+            v = {t: sum(c for s, c in v.items() if not (s & t)) for t in states}
+        return sum(v.values())
+    f = grid_independent_sets(30, 3)
+    assert tn_count(f) == dpll_count(f) == transfer(30)

@@ -120,9 +120,181 @@
    "max_n_all_solved": 10
   },
   "rand6.0|brute": {
-   "max_n_all_solved": 22
+   "slope": 0.8294367271710236,
+   "base": 1.7769914343812172,
+   "n_range": [
+    20,
+    30
+   ],
+   "points": 6,
+   "max_n_all_solved": 30
+  },
+  "rand6.0|dpll": {
+   "slope": 0.06705665101520746,
+   "base": 1.047577262023357,
+   "n_range": [
+    80,
+    200
+   ],
+   "points": 6,
+   "max_n_all_solved": 200
+  },
+  "rand6.0|tn": {
+   "slope": 0.8818996373801732,
+   "base": 1.8428001715781042,
+   "n_range": [
+    22,
+    28
+   ],
+   "points": 4,
+   "max_n_all_solved": 28
+  },
+  "rand6.0|openai": {
+   "slope": 1.1608038873407864,
+   "base": 2.235819755256565,
+   "n_range": [
+    6,
+    14
+   ],
+   "points": 5,
+   "max_n_all_solved": 14
+  },
+  "rand6.0|openai_R2": {
+   "max_n_all_solved": 4
+  },
+  "rand6.0|anthropic": {
+   "max_n_all_solved": 6
+  },
+  "rand6.0|anthropic_l0": {
+   "max_n_all_solved": 8
+  },
+  "planted|brute": {
+   "slope": 0.7934330173452697,
+   "base": 1.733193843775399,
+   "n_range": [
+    20,
+    30
+   ],
+   "points": 6,
+   "max_n_all_solved": 30
+  },
+  "planted|dpll": {
+   "slope": 0.1084341339814077,
+   "base": 1.0780575039497255,
+   "n_range": [
+    60,
+    140
+   ],
+   "points": 7,
+   "max_n_all_solved": 140
+  },
+  "planted|tn": {
+   "slope": 0.9153745017876588,
+   "base": 1.8860586005510473,
+   "n_range": [
+    22,
+    28
+   ],
+   "points": 4,
+   "max_n_all_solved": 28
+  },
+  "planted|openai": {
+   "slope": 1.1413677745046502,
+   "base": 2.205900586751232,
+   "n_range": [
+    8,
+    14
+   ],
+   "points": 4,
+   "max_n_all_solved": 14
+  },
+  "planted|openai_R2": {
+   "max_n_all_solved": 4
+  },
+  "planted|anthropic": {
+   "max_n_all_solved": 8
+  },
+  "planted|anthropic_l0": {
+   "max_n_all_solved": 10
+  },
+  "php|brute": {
+   "max_n_all_solved": 30
+  },
+  "php|dpll": {
+   "max_n_all_solved": 72
+  },
+  "php|tn": {
+   "max_n_all_solved": 42
+  },
+  "php|openai": {
+   "max_n_all_solved": 12
+  },
+  "php|openai_R2": {
+   "max_n_all_solved": 6
+  },
+  "php|anthropic": {
+   "max_n_all_solved": 20
+  },
+  "php|anthropic_l0": {
+   "max_n_all_solved": 20
+  },
+  "gridis|brute": {
+   "slope": 0.9070681860728682,
+   "base": 1.8752308198243546,
+   "n_range": [
+    21,
+    30
+   ],
+   "points": 4,
+   "max_n_all_solved": 30
+  },
+  "gridis|dpll": {
+   "slope": 0.13739489166154623,
+   "base": 1.0999171752899444,
+   "n_range": [
+    60,
+    120
+   ],
+   "points": 3,
+   "max_n_all_solved": 120
+  },
+  "gridis|tn": {
+   "max_n_all_solved": 300
+  },
+  "gridis|openai": {
+   "slope": 1.1104719518155362,
+   "base": 2.1591626888501474,
+   "n_range": [
+    9,
+    15
+   ],
+   "points": 3,
+   "max_n_all_solved": 15
+  },
+  "gridis|openai_R2": {
+   "max_n_all_solved": 6
+  },
+  "gridis|anthropic": {
+   "slope": 0.39144731598950916,
+   "base": 1.3117086540701983,
+   "n_range": [
+    27,
+    45
+   ],
+   "points": 4,
+   "max_n_all_solved": 45
+  },
+  "gridis|anthropic_l0": {
+   "slope": 0.059799914508066175,
+   "base": 1.0423211926507985,
+   "n_range": [
+    18,
+    45
+   ],
+   "points": 5,
+   "max_n_all_solved": 45
   }
  },
  "count_disagreements": [],
- "instances_cross_checked": 302
+ "instances_cross_checked": 504
 }

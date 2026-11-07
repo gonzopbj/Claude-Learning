@@ -1,4 +1,2 @@
 __pycache__/
 .pytest_cache/
-results/runs.jsonl
-results/run_log.txt

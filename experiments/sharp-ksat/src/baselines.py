@@ -221,7 +221,7 @@ def tn_count_stats(cnf: CNF, optimize="auto"):
     st["log2_flops"] = float(np.log2(max(float(info.opt_cost), 1.0)))
     st["width"] = float(np.log2(max(float(info.largest_intermediate), 1.0)))
     if dtype is object:
-        tensors = [t.astype(object) for t in tensors]
+        tensors = [t.astype(np.int64).astype(object) for t in tensors]  # Python ints, exact
     val = oe.contract(eq, *tensors, optimize=path)
     val = int(round(float(val))) if dtype is None else int(val)
     return val << n_free, st
