@@ -47,6 +47,9 @@ _Nothing yet._
 
 Left unresolved at the end of a session. Claude raises these first next time.
 
+- (2026-11-07, off-curriculum, not counted in hours) `experiments/sharp-ksat/REPORT.md`: the two October-2026
+  ETH-refutation algorithms, implemented and benchmarked. Before reading it, predict: will either beat
+  brute force at any n you can run, and why or why not?
 - (2026-09-20, from the attention discussion) Take X ← Z → Y with Z observed and no edge
   X → Y. Train a transformer to predict Y from (X, Z). What will the attention weight from Y's
   position onto X be, and what would it need to be for "attention weights are causal edges"

@@ -1,0 +1,137 @@
+[
+ {
+  "lam": 1,
+  "i": 0,
+  "t": 1,
+  "rank_row_bits": 1.0,
+  "rank_col_bits": 1.0,
+  "c_row": 2,
+  "c_col": 2
+ },
+ {
+  "lam": 1,
+  "i": 1,
+  "t": 1,
+  "rank_row_bits": 1.0,
+  "rank_col_bits": 1.0,
+  "c_row": 2,
+  "c_col": 2
+ },
+ {
+  "lam": 2,
+  "i": 0,
+  "t": 1,
+  "rank_row_bits": 2.0,
+  "rank_col_bits": 4.0,
+  "c_row": 4,
+  "c_col": 4
+ },
+ {
+  "lam": 2,
+  "i": 1,
+  "t": 1,
+  "rank_row_bits": 4.0,
+  "rank_col_bits": 2.0,
+  "c_row": 4,
+  "c_col": 4
+ },
+ {
+  "lam": 3,
+  "i": 0,
+  "t": 1,
+  "rank_row_bits": 3.0,
+  "rank_col_bits": 6.0,
+  "c_row": 4,
+  "c_col": 6
+ },
+ {
+  "lam": 3,
+  "i": 1,
+  "t": 1,
+  "rank_row_bits": 6.0,
+  "rank_col_bits": 3.0,
+  "c_row": 6,
+  "c_col": 4
+ },
+ {
+  "lam": 4,
+  "i": 0,
+  "t": 2,
+  "rank_row_bits": 4.0,
+  "rank_col_bits": 7.0,
+  "c_row": 8,
+  "c_col": 8
+ },
+ {
+  "lam": 4,
+  "i": 1,
+  "t": 2,
+  "rank_row_bits": 7.169925001442312,
+  "rank_col_bits": 7.169925001442312,
+  "c_row": 8,
+  "c_col": 8
+ },
+ {
+  "lam": 4,
+  "i": 2,
+  "t": 2,
+  "rank_row_bits": 7.0,
+  "rank_col_bits": 4.0,
+  "c_row": 8,
+  "c_col": 8
+ },
+ {
+  "lam": 5,
+  "i": 0,
+  "t": 2,
+  "rank_row_bits": 5.0,
+  "rank_col_bits": 10.0,
+  "c_row": 8,
+  "c_col": 10
+ },
+ {
+  "lam": 5,
+  "i": 1,
+  "t": 2,
+  "rank_row_bits": 8.459431618637296,
+  "rank_col_bits": 8.459431618637296,
+  "c_row": 10,
+  "c_col": 10
+ },
+ {
+  "lam": 5,
+  "i": 2,
+  "t": 2,
+  "rank_row_bits": 10.0,
+  "rank_col_bits": 5.0,
+  "c_row": 10,
+  "c_col": 8
+ },
+ {
+  "lam": 6,
+  "i": 0,
+  "t": 2,
+  "rank_row_bits": 6.0,
+  "rank_col_bits": 12.0,
+  "c_row": 8,
+  "c_col": 12
+ },
+ {
+  "lam": 6,
+  "i": 1,
+  "t": 2,
+  "rank_row_bits": 9.906890595608518,
+  "rank_col_bits": 9.906890595608518,
+  "c_row": 11,
+  "c_col": 11
+ },
+ {
+  "lam": 6,
+  "i": 2,
+  "t": 2,
+  "rank_row_bits": 12.0,
+  "rank_col_bits": 6.0,
+  "c_row": 12,
+  "c_col": 8
+ }
+]
